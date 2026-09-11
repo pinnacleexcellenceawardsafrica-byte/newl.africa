@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link rel="icon" type="image/png" href="img/icon.png">
 <style>
 :root{--primary:#1e6b3a;--primary-light:#2a8a4a;--primary-dark:#15502a;--primary-bg:#e6f4ec;--secondary:#1a6dff;--accent:#e67e22;--danger:#dc3545;--bg:#f6faf8;--surface:#fff;--border:#e8f0ec;--text:#1a2a24;--text-soft:#4d5f57;--text-light:#8a9f95;--radius:12px;--radius-lg:20px;--radius-pill:999px;--shadow-hover:0 8px 30px rgba(30,107,58,0.08);--shadow-lg:0 20px 60px rgba(21,80,42,0.10)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -319,13 +320,13 @@ const SMSService = {
 
 const SMS = {
   tlWelcome: (n,u,p) => `Welcome ${n}. You are now a Team Leader at NEWL AFRICA. Login: ${LOGIN_URL} Username: ${u} Password: ${p}`,
-  tlProjectAssigned: (n,proj,smp,po) => `${n}, you have been assigned to "${proj}"${smp?' (SMP '+smp+')':''}${po?' (PO '+po+')':''}. Login: ${LOGIN_URL}`,
+  tlProjectAssigned: (n,proj,smp,po) => `${n}, you have been assigned to "${proj}"${smp?' (SMP '+smp+')':''}${po?' (PO '+po+')':''}. Login ${LOGIN_URL} to onboard your casual workers and start submitting daily logs.`,
   tlProjectRemoved: (proj) => `You have been removed from "${proj}". Contact admin if unexpected.`,
   tlPasswordReset: (np) => `Your NEWL AFRICA password has been reset. New password: ${np}. Login: ${LOGIN_URL}`,
   fundRequested: (tl,proj,amt,reason) => `${tl} requested KES ${Number(amt).toLocaleString()} on "${proj}". Reason: ${reason}`.slice(0,160),
   fundApproved: (amt,proj) => `Your request of KES ${Number(amt).toLocaleString()} on "${proj}" was APPROVED. Login: ${LOGIN_URL}`,
   fundDeclined: (amt,proj,reason) => `Your request of KES ${Number(amt).toLocaleString()} on "${proj}" was DECLINED.${reason?' Reason: '+reason:''}`.slice(0,160),
-  logSubmitted: (tl,proj,date,hrs,sum) => `${tl} submitted log for "${proj}" on ${date}. ${hrs}h - ${sum}`.slice(0,160),
+  logSubmitted: (tl,proj,date,hrs,sum) => `LOG: ${tl} on "${proj}" (${date}). ${hrs}h - ${sum}`.slice(0,160),
   projectCompleted: (tl,proj) => `${tl} marked "${proj}" COMPLETE. Review at ${LOGIN_URL}`,
   projectApproved: (proj) => `Project "${proj}" has been approved and marked complete.`,
   projectReturned: (proj,reason) => `Project "${proj}" was sent back.${reason?' Reason: '+reason:''}`,
@@ -353,6 +354,27 @@ function tsToMillis(ts) { if (!ts) return 0; if (ts.toDate) return ts.toDate().g
 function timeAgo(ts) { const t = tsToMillis(ts); const s = Math.floor((Date.now()-t)/1000); if (s<60) return 'just now'; if (s<3600) return Math.floor(s/60)+'m ago'; if (s<86400) return Math.floor(s/3600)+'h ago'; if (s<604800) return Math.floor(s/86400)+'d ago'; return fmtDate(ts); }
 function initials(n) { return (n||'U').split(' ').filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join(''); }
 function genPassword() { const c='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789'; let o='NLA-'; for(let i=0;i<6;i++)o+=c[Math.floor(Math.random()*c.length)]; return o; }
+
+// EDIT 5: Auto-prefix +254 in ALL phone input fields
+function normalizePhoneInput(el) {
+  let v = (el.value || '').trim();
+  if (!v) return;
+  if (v.startsWith('+')) return;
+  const d = v.replace(/\D/g,'');
+  if (d.startsWith('254') && d.length === 12) el.value = '+' + d;
+  else if (d.startsWith('0') && d.length === 10) el.value = '+254' + d.slice(1);
+  else if ((d.startsWith('7')||d.startsWith('1')) && d.length === 9) el.value = '+254' + d;
+}
+
+// EDIT 8: Admin password gate for delete operations
+async function requireAdminPassword(actionLabel) {
+  const pwd = prompt(`Confirm your admin password to ${actionLabel}:`);
+  if (!pwd) return false;
+  const adminEmail = (currentUser.email && currentUser.email.includes('@')) ? currentUser.email : (currentUser.username || 'admin') + '@newl.africa';
+  try { await window.fbAuth.signInWithEmailAndPassword(window.firebaseAuth, adminEmail, pwd); return true; }
+  catch(e) { toast('Wrong admin password. Aborted.', 'error'); return false; }
+}
+
 function findProject(id) { return DB.projects.find(p=>p.id===id); }
 function findTL(id) { return DB.users.find(u=>u.id===id); }
 function findCasual(id) { return DB.casuals.find(c=>c.id===id); }
@@ -667,22 +689,150 @@ function renderProjSites(p) { return `<div class="card"><h4 style="font-size:14p
 
 function renderTeamLeaders() {
   const tls = DB.users.filter(u => u.role === 'team_leader');
-  return `<div class="section-head"><div><span class="hash"># People</span><h2>Team Leaders</h2><div class="sub">${tls.length} team leader${tls.length!==1?'s':''}</div></div><button class="btn btn-primary" onclick="openTLModal()"><i class="fas fa-plus"></i> Add Team Leader</button></div>${tls.length ? `<div class="grid grid-2">${tls.map(tl => { const projects = DB.projects.filter(p => p.team_leader_id === tl.id); const casuals = DB.casuals.filter(c => projects.some(p => p.id === c.project_id) && c.active); return `<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:15px">${escapeHtml(tl.full_name||tl.username)}</div><div style="font-size:12px;color:var(--text-soft);margin-top:2px"><i class="fas fa-phone"></i> ${escapeHtml(tl.phone||'-')}</div><div style="font-size:12px;color:var(--text-soft)"><i class="fas fa-envelope"></i> ${escapeHtml(tl.email||'-')}</div><div style="font-size:12px;color:var(--text-soft)"><i class="fas fa-user"></i> ${escapeHtml(tl.username||'-')}</div></div><button class="btn btn-xs btn-outline" onclick="openTLModal('${tl.id}')"><i class="fas fa-edit"></i></button></div><div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-soft);font-weight:600;margin-bottom:6px">Login Credentials</div><div class="cred-box"><button class="copy" onclick="copyText('${escapeHtml(tl.username)}@newl.africa | Pass: ${escapeHtml(tl.initial_password||'(not stored)')}')">Copy</button><div><b>Email:</b> ${escapeHtml(tl.username)}@newl.africa</div><div><b>Password:</b> ${escapeHtml(tl.initial_password||'(ask admin to reset)')}</div></div><div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="btn btn-xs btn-outline" onclick="resetTLPassword('${tl.id}')"><i class="fas fa-key"></i> Reset Password</button><button class="btn btn-xs btn-outline" onclick="sendTLCredentials('${tl.id}')"><i class="fas fa-sms"></i> Send via SMS</button><button class="btn btn-xs btn-danger" onclick="deleteTL('${tl.id}')"><i class="fas fa-trash"></i></button></div></div><div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--text-soft)"><div><b>${projects.length}</b> project${projects.length!==1?'s':''} - <b>${casuals.length}</b> casuals active</div>${projects.map(p => `<div style="margin-top:4px"><i class="fas fa-folder" style="color:var(--primary)"></i> ${escapeHtml(p.name)} <span style="color:var(--text-light)">- SMP ${escapeHtml(p.smp||'-')}</span></div>`).join('')}</div></div>`; }).join('')}</div>` : `<div class="card empty-state"><i class="fas fa-user-tie"></i><div class="msg">No team leaders yet. Add your first one.</div></div>`}`;
+  return `<div class="section-head"><div><span class="hash"># People</span><h2>Team Leaders</h2><div class="sub">${tls.length} team leader${tls.length!==1?'s':''}</div></div><button class="btn btn-primary" onclick="openTLModal()"><i class="fas fa-plus"></i> Add Team Leader</button></div>${tls.length ? `<div class="grid grid-2">${tls.map(tl => { const projects = DB.projects.filter(p => p.team_leader_id === tl.id); const casuals = DB.casuals.filter(c => projects.some(p => p.id === c.project_id) && c.active); return `<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:15px">${escapeHtml(tl.full_name||tl.username)}</div><div style="font-size:12px;color:var(--text-soft);margin-top:2px"><i class="fas fa-phone"></i> ${escapeHtml(tl.phone||'-')}</div><div style="font-size:12px;color:var(--text-soft)"><i class="fas fa-envelope"></i> ${escapeHtml(tl.email||'-')}</div><div style="font-size:12px;color:var(--text-soft)"><i class="fas fa-user"></i> ${escapeHtml(tl.username||'-')}</div></div><button class="btn btn-xs btn-outline" onclick="openTLModal('${tl.id}')"><i class="fas fa-edit"></i></button></div><div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-soft);font-weight:600;margin-bottom:6px">Login Credentials</div><div class="cred-box"><button class="copy" onclick="copyText('${escapeHtml(tl.username)}@newl.africa | Pass: ${escapeHtml(tl.initial_password||'(not stored)')}')">Copy</button><div><b>Email:</b> ${escapeHtml(tl.username)}@newl.africa</div><div><b>Password:</b> ${escapeHtml(tl.initial_password||'(ask admin to reset)')}</div></div><div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+        <button class="btn btn-xs btn-outline" onclick="openAssignProjectsModal('${tl.id}')"><i class="fas fa-folder-plus"></i> Assign Projects</button>
+        <button class="btn btn-xs btn-outline" onclick="openSendMessageModal('${tl.id}')"><i class="fas fa-comment-dots"></i> Message</button>
+        <button class="btn btn-xs btn-outline" onclick="resetTLPassword('${tl.id}')"><i class="fas fa-key"></i> Reset Password</button>
+        <button class="btn btn-xs btn-outline" onclick="sendTLCredentials('${tl.id}')"><i class="fas fa-sms"></i> Send Credentials</button>
+        <button class="btn btn-xs btn-danger" onclick="deleteTL('${tl.id}')"><i class="fas fa-trash"></i></button>
+      </div></div><div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--text-soft)"><div><b>${projects.length}</b> project${projects.length!==1?'s':''} - <b>${casuals.length}</b> casuals active</div>${projects.map(p => `<div style="margin-top:4px"><i class="fas fa-folder" style="color:var(--primary)"></i> ${escapeHtml(p.name)} <span style="color:var(--text-light)">- SMP ${escapeHtml(p.smp||'-')}</span></div>`).join('')}</div></div>`; }).join('')}</div>` : `<div class="card empty-state"><i class="fas fa-user-tie"></i><div class="msg">No team leaders yet. Add your first one.</div></div>`}`;
+}
+
+// EDIT 1: Standalone "Assign Projects" button + SMS on assignment
+function openAssignProjectsModal(tlId) {
+  const tl = findTL(tlId);
+  if (!tl) return;
+  const currentlyAssigned = DB.projects.filter(p => p.team_leader_id === tlId).map(p => p.id);
+  const body = `
+    <div style="font-size:13px;color:var(--text-soft);margin-bottom:12px">
+      <b>${escapeHtml(tl.full_name || tl.username)}</b><br>
+      Phone: ${escapeHtml(tl.phone || '-')}
+    </div>
+    <div class="field"><label>Select Projects to Assign</label>
+      <div style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:12px;padding:8px">
+        ${DB.projects.length ? DB.projects.map(p => {
+          const checked = currentlyAssigned.includes(p.id);
+          const otherTL = p.team_leader_id && p.team_leader_id !== tlId ? findTL(p.team_leader_id) : null;
+          return `<label style="display:flex;align-items:center;gap:8px;padding:6px 4px;font-size:13px;text-transform:none;letter-spacing:0;color:var(--text);font-weight:400;cursor:pointer">
+            <input type="checkbox" class="assign-proj" value="${p.id}" ${checked?'checked':''} style="width:auto;margin:0">
+            <span>${escapeHtml(p.name)} <span style="color:var(--text-soft)">- SMP ${escapeHtml(p.smp||'-')}</span>${otherTL?` <span style="color:var(--accent);font-size:11px">(currently: ${escapeHtml(otherTL.full_name||otherTL.username)})</span>`:''}</span>
+          </label>`;
+        }).join('') : '<div style="padding:8px;color:var(--text-soft);font-size:12px">No projects yet. Create one first.</div>'}
+      </div>
+    </div>
+  `;
+  openModal(`Assign Projects — ${escapeHtml(tl.full_name||tl.username)}`, body, [
+    { label:'Cancel', cls:'btn btn-outline', onclick:'closeModal()' },
+    { label:'Save Assignments', cls:'btn btn-primary', onclick:`saveProjectAssignments('${tlId}')` }
+  ]);
+}
+
+async function saveProjectAssignments(tlId) {
+  const tl = findTL(tlId);
+  if (!tl) return;
+  const selected = Array.from(document.querySelectorAll('.assign-proj:checked')).map(c => c.value);
+  const previouslyAssigned = DB.projects.filter(p => p.team_leader_id === tlId).map(p => p.id);
+  const added = selected.filter(id => !previouslyAssigned.includes(id));
+  const removed = previouslyAssigned.filter(id => !selected.includes(id));
+  if (!added.length && !removed.length) { toast('No changes', 'info'); closeModal(); return; }
+  showLoading('Updating assignments...');
+  try {
+    for (const pid of selected) {
+      await fsUpdate('projects', pid, { team_leader_id: tlId });
+      const p = findProject(pid); if (p) p.team_leader_id = tlId;
+    }
+    for (const pid of removed) {
+      await fsUpdate('projects', pid, { team_leader_id: null });
+      const p = findProject(pid); if (p) p.team_leader_id = null;
+    }
+    tl.project_ids = selected;
+    await fsUpdate('users', tlId, { project_ids: selected });
+    auditLog('Updated TL assignments', `${tl.full_name||tl.username}: +${added.length} -${removed.length}`);
+    toast(`Assignments updated — ${added.length} added, ${removed.length} removed`);
+    if (tl.phone) {
+      for (const pid of added) {
+        const proj = findProject(pid);
+        if (proj) await SMSService.send(tl.phone, SMS.tlProjectAssigned(tl.full_name||tl.username, proj.name, proj.smp, proj.po_number), 'tlProjectAssigned');
+      }
+    }
+    hideLoading(); closeModal(); navigate('team-leaders');
+  } catch(e) { hideLoading(); console.error(e); toast('Failed: '+e.message, 'error'); }
+}
+
+// EDIT 7: Admin can message TLs directly
+function openSendMessageModal(tlId) {
+  const tl = findTL(tlId);
+  if (!tl) return;
+  if (!tl.phone) { toast('No phone on record for this TL', 'error'); return; }
+  const body = `
+    <div style="font-size:13px;color:var(--text-soft);margin-bottom:12px">
+      Send a direct message to <b>${escapeHtml(tl.full_name||tl.username)}</b><br>
+      Phone: ${escapeHtml(tl.phone)}
+    </div>
+    <div class="field"><label>Message</label>
+      <textarea id="direct-msg" placeholder="Type your message..." style="min-height:110px"></textarea>
+    </div>
+    <div style="font-size:11px;color:var(--text-soft);text-align:right" id="direct-msg-count">0 characters</div>
+  `;
+  openModal('Send Message to TL', body, [
+    { label:'Cancel', cls:'btn btn-outline', onclick:'closeModal()' },
+    { label:'Send SMS + In-App', cls:'btn btn-primary', onclick:`sendDirectMessage('${tlId}')` }
+  ]);
+  const ta = document.getElementById('direct-msg');
+  const counter = document.getElementById('direct-msg-count');
+  ta.addEventListener('input', () => { counter.textContent = ta.value.length + ' characters'; });
+  ta.focus();
+}
+
+async function sendDirectMessage(tlId) {
+  const tl = findTL(tlId);
+  if (!tl) return;
+  const msg = (document.getElementById('direct-msg').value || '').trim();
+  if (!msg) { toast('Message cannot be empty', 'error'); return; }
+  showLoading('Sending...');
+  try {
+    const nid = await fsAdd('notifications', { recipient_id: tl.id, type:'admin_message', title:'Message from Admin', message: msg, link:null, read:false, created_at: Date.now() });
+    DB.notifications.unshift({ id:nid, recipient_id: tl.id, type:'admin_message', title:'Message from Admin', message: msg, link:null, read:false, created_at: Date.now() });
+    if (tl.phone) {
+      const smsMsg = `NEWL AFRICA admin: ${msg}`.slice(0,160);
+      await SMSService.send(tl.phone, smsMsg, null);
+    }
+    auditLog('Sent direct message', `To ${tl.full_name||tl.username}: ${msg.slice(0,60)}`);
+    toast('Message sent (in-app + SMS)');
+    hideLoading(); closeModal(); navigate('team-leaders');
+  } catch(e) { hideLoading(); console.error(e); toast('Failed: '+e.message, 'error'); }
 }
 
 function openTLModal(editId) {
   const tl = editId ? findTL(editId) : null;
-  const body = `<div class="field"><label>Full Name</label><input id="tlf-name" value="${tl?escapeHtml(tl.full_name||''):''}" placeholder="e.g. Ken Juma"></div><div class="field-row"><div class="field"><label>Phone</label><input id="tlf-phone" value="${tl?escapeHtml(tl.phone||''):''}" placeholder="+254712345678"></div><div class="field"><label>Email (contact)</label><input id="tlf-email" value="${tl?escapeHtml(tl.email||''):''}" placeholder="name@newl.africa"></div></div><div class="field"><label>Username (will be {username}@newl.africa)</label><input id="tlf-username" value="${tl?escapeHtml(tl.username||''):''}" placeholder="tl.kenjuma" ${tl?'readonly':''}></div>${!tl ? `<div style="font-size:12px;color:var(--text-soft);background:var(--bg);border-radius:10px;padding:10px 14px;margin-bottom:12px"><i class="fas fa-key"></i> A password will be auto-generated, saved to Firestore, and sent by SMS with the login link.</div>` : `<div class="field"><label>Password (reset if needed)</label><input id="tlf-password" placeholder="Leave blank to keep current"></div>`}<div class="field"><label>Assign Projects</label><div style="max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:12px;padding:8px">${DB.projects.length ? DB.projects.map(p => { const checked = tl && (tl.project_ids || DB.projects.filter(x=>x.team_leader_id===tl.id).map(x=>x.id)).includes(p.id); return `<label style="display:flex;align-items:center;gap:8px;padding:6px 4px;font-size:13px;text-transform:none;letter-spacing:0;color:var(--text);font-weight:400;cursor:pointer"><input type="checkbox" class="tlf-proj" value="${p.id}" ${checked?'checked':''} style="width:auto;margin:0"><span>${escapeHtml(p.name)} <span style="color:var(--text-soft)">- SMP ${escapeHtml(p.smp||'-')}</span></span></label>`; }).join('') : '<div style="padding:8px;color:var(--text-soft);font-size:12px">No projects yet. Create one first.</div>'}</div></div>`;
+  const body = `<div class="field"><label>Full Name</label><input id="tlf-name" value="${tl?escapeHtml(tl.full_name||''):''}" placeholder="e.g. Ken Juma"></div><div class="field-row"><div class="field"><label>Phone</label><input id="tlf-phone" value="${tl?escapeHtml(tl.phone||''):''}" placeholder="+254712345678" onblur="normalizePhoneInput(this)"></div><div class="field"><label>Email (contact)</label><input id="tlf-email" value="${tl?escapeHtml(tl.email||''):''}" placeholder="name@newl.africa"></div></div><div class="field"><label>Username (will be {username}@newl.africa)</label><input id="tlf-username" value="${tl?escapeHtml(tl.username||''):''}" placeholder="tl.kenjuma" ${tl?'readonly':''}></div>${!tl ? `<div style="font-size:12px;color:var(--text-soft);background:var(--bg);border-radius:10px;padding:10px 14px;margin-bottom:12px"><i class="fas fa-key"></i> A password will be auto-generated, saved to Firestore, and sent by SMS with the login link.</div>` : `<div class="field"><label>Password (reset if needed)</label><input id="tlf-password" placeholder="Leave blank to keep current"></div>`}<div class="field"><label>Assign Projects</label><div style="max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:12px;padding:8px">${DB.projects.length ? DB.projects.map(p => { const checked = tl && (tl.project_ids || DB.projects.filter(x=>x.team_leader_id===tl.id).map(x=>x.id)).includes(p.id); return `<label style="display:flex;align-items:center;gap:8px;padding:6px 4px;font-size:13px;text-transform:none;letter-spacing:0;color:var(--text);font-weight:400;cursor:pointer"><input type="checkbox" class="tlf-proj" value="${p.id}" ${checked?'checked':''} style="width:auto;margin:0"><span>${escapeHtml(p.name)} <span style="color:var(--text-soft)">- SMP ${escapeHtml(p.smp||'-')}</span></span></label>`; }).join('') : '<div style="padding:8px;color:var(--text-soft);font-size:12px">No projects yet. Create one first.</div>'}</div></div>`;
   openModal(editId?'Edit Team Leader':'New Team Leader', body, [{ label:'Cancel', cls:'btn btn-outline', onclick:'closeModal()' }, { label: editId?'Save':'Create', cls:'btn btn-primary', onclick:`saveTL(${editId?`'${editId}'`:'null'})` }]);
 }
 
+// EDIT 3: Admin password gate BEFORE creating TL account + auto-prefix +254
 async function saveTL(id) {
   const full_name = document.getElementById('tlf-name').value.trim();
-  const phone = document.getElementById('tlf-phone').value.trim();
+  const phoneRaw = document.getElementById('tlf-phone').value.trim();
   const email = document.getElementById('tlf-email').value.trim();
   const username = document.getElementById('tlf-username').value.trim();
   const project_ids = Array.from(document.querySelectorAll('.tlf-proj:checked')).map(c => c.value);
   if (!full_name || !username) { toast('Name and username required', 'error'); return; }
+  // Auto-prefix +254 if user typed raw local number
+  let phone = phoneRaw;
+  if (phone && !phone.startsWith('+')) {
+    const d = phone.replace(/\D/g,'');
+    if (d.startsWith('0') && d.length === 10) phone = '+254' + d.slice(1);
+    else if ((d.startsWith('7')||d.startsWith('1')) && d.length === 9) phone = '+254' + d;
+    else phone = '+' + d;
+  }
+  // Admin password gate (only for new accounts)
+  if (!id) {
+    const pwdCheck = prompt('Confirm your admin password to create this Team Leader:');
+    if (!pwdCheck) { toast('Cancelled', 'info'); return; }
+    const adminEmail = (currentUser.email && currentUser.email.includes('@')) ? currentUser.email : (currentUser.username || 'admin') + '@newl.africa';
+    try { await window.fbAuth.signInWithEmailAndPassword(window.firebaseAuth, adminEmail, pwdCheck); }
+    catch(e) { toast('Wrong admin password. Aborted.', 'error'); return; }
+  }
   const duplicate = DB.users.find(t => t.username === username && t.id !== id && t.role === 'team_leader');
   if (duplicate) { toast('Username already in use', 'error'); return; }
   showLoading('Saving team leader...');
@@ -725,8 +875,10 @@ async function saveTL(id) {
   } catch(e) { hideLoading(); console.error(e); let msg = e.message || 'Failed'; if (msg.includes('auth/email-already-in-use')) msg = 'Username already registered. Try a different one, or delete the orphaned Auth user in Firebase Console.'; toast(msg, 'error'); }
 }
 
+// EDIT 8: Admin password gate for resetTLPassword
 async function resetTLPassword(id) {
   const tl = findTL(id); if (!tl) return;
+  if (!await requireAdminPassword('reset password for ' + (tl.full_name||tl.username))) return;
   const newPwd = prompt(`Enter new password for ${tl.full_name || tl.username}:`, genPassword());
   if (!newPwd) return;
   try { await fsUpdate('users', id, { initial_password: newPwd }); tl.initial_password = newPwd; toast(`Password updated. Click "Send via SMS" to notify.`); navigate('team-leaders'); }
@@ -742,9 +894,11 @@ async function sendTLCredentials(id) {
 }
 function copyText(text) { if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => toast('Copied')); else prompt('Copy:', text); }
 
+// EDIT 8: Admin password gate for deleteTL
 async function deleteTL(id) {
   const tl = findTL(id); if (!tl) return;
   if (!confirm(`Delete ${tl.full_name||tl.username}? Their projects will become unassigned.`)) return;
+  if (!await requireAdminPassword('delete Team Leader ' + (tl.full_name||tl.username))) return;
   showLoading('Deleting...');
   try {
     const projects = DB.projects.filter(p => p.team_leader_id === id);
@@ -771,7 +925,7 @@ function renderCasuals() {
 function openCasualModal(editId, presetProjectId) {
   const c = editId ? findCasual(editId) : null;
   const myProjects = currentUser.type === 'team_leader' ? DB.projects.filter(p => p.team_leader_id === currentUser.id) : DB.projects;
-  const body = `<div class="field"><label>Name</label><input id="cf-name" value="${c?escapeHtml(c.name||''):''}" placeholder="e.g. John Otieno"></div><div class="field"><label>Phone</label><input id="cf-phone" value="${c?escapeHtml(c.phone||''):''}" placeholder="+254712345678"></div><div class="field-row"><div class="field"><label>Role</label><input id="cf-role" value="${c?escapeHtml(c.role||''):''}" placeholder="Rigger, Electrician..."></div><div class="field"><label>Daily Rate (KES) - optional</label><input id="cf-rate" type="number" value="${c?c.daily_rate||'':''}" placeholder="Optional"></div></div><div class="field"><label>Project</label><select id="cf-project">${myProjects.length ? myProjects.map(p => `<option value="${p.id}" ${(c&&c.project_id===p.id)||presetProjectId===p.id?'selected':''}>${escapeHtml(p.name)} - SMP ${escapeHtml(p.smp||'-')}</option>`).join('') : '<option value="">No projects available</option>'}</select></div>`;
+  const body = `<div class="field"><label>Name</label><input id="cf-name" value="${c?escapeHtml(c.name||''):''}" placeholder="e.g. John Otieno"></div><div class="field"><label>Phone</label><input id="cf-phone" value="${c?escapeHtml(c.phone||''):''}" placeholder="+254712345678" onblur="normalizePhoneInput(this)"></div><div class="field-row"><div class="field"><label>Role</label><input id="cf-role" value="${c?escapeHtml(c.role||''):''}" placeholder="Rigger, Electrician..."></div><div class="field"><label>Daily Rate (KES) - optional</label><input id="cf-rate" type="number" value="${c?c.daily_rate||'':''}" placeholder="Optional"></div></div><div class="field"><label>Project</label><select id="cf-project">${myProjects.length ? myProjects.map(p => `<option value="${p.id}" ${(c&&c.project_id===p.id)||presetProjectId===p.id?'selected':''}>${escapeHtml(p.name)} - SMP ${escapeHtml(p.smp||'-')}</option>`).join('') : '<option value="">No projects available</option>'}</select></div>`;
   openModal(editId?'Edit Casual':'Add Casual', body, [{ label:'Cancel', cls:'btn btn-outline', onclick:'closeModal()' }, { label: editId?'Save':'Add', cls:'btn btn-primary', onclick:`saveCasual(${editId?`'${editId}'`:'null'})` }]);
 }
 
@@ -806,9 +960,11 @@ async function saveCasual(id) {
   } catch(e) { hideLoading(); console.error(e); toast('Failed: '+e.message, 'error'); }
 }
 
+// EDIT 8: Admin password gate for deleteCasual
 async function deleteCasual(id) {
   const c = findCasual(id); if (!c) return;
   if (!confirm(`Remove ${c.name}?`)) return;
+  if (!await requireAdminPassword('remove casual ' + c.name)) return;
   const pid = c.project_id; const project = findProject(pid); const adminUser = DB.users.find(u => u.role === 'admin');
   showLoading('Removing...');
   try {
@@ -966,7 +1122,7 @@ function renderSettings() {
 function toggleSmsSetting(k, el) { smsSettings[k]=!smsSettings[k]; el.classList.toggle('on', smsSettings[k]); saveSmsSettings(); }
 function toggleSmsEvent(k, el) { smsSettings.events[k]=!smsSettings.events[k]; el.classList.toggle('on', smsSettings.events[k]); saveSmsSettings(); }
 function saveSmsConfig() { const w = document.getElementById('sms-worker'); const s = document.getElementById('sms-sender'); if (w) smsSettings.workerUrl = w.value.trim(); if (s) smsSettings.senderId = s.value.trim() || 'MOBILESASA'; saveSmsSettings(); toast('Saved'); }
-function openTestSmsModal() { const body = `<div class="field"><label>Phone</label><input id="test-sms-phone" placeholder="+254712345678" value="${escapeHtml(currentUser.phone||'')}"></div><div class="field"><label>Message</label><textarea id="test-sms-msg">${escapeHtml(SMS.test())}</textarea></div><div style="font-size:12px;color:var(--text-soft);background:var(--bg);padding:10px;border-radius:10px"><b>Status:</b> ${smsSettings.dryRun?'Dry-run mode':'Live mode'}</div>`; openModal('Send Test SMS', body, [{ label:'Cancel', cls:'btn btn-outline', onclick:'closeModal()' }, { label:'Send', cls:'btn btn-primary', onclick:'sendTestSms()' }]); }
+function openTestSmsModal() { const body = `<div class="field"><label>Phone</label><input id="test-sms-phone" placeholder="+254712345678" value="${escapeHtml(currentUser.phone||'')}" onblur="normalizePhoneInput(this)"></div><div class="field"><label>Message</label><textarea id="test-sms-msg">${escapeHtml(SMS.test())}</textarea></div><div style="font-size:12px;color:var(--text-soft);background:var(--bg);padding:10px;border-radius:10px"><b>Status:</b> ${smsSettings.dryRun?'Dry-run mode':'Live mode'}</div>`; openModal('Send Test SMS', body, [{ label:'Cancel', cls:'btn btn-outline', onclick:'closeModal()' }, { label:'Send', cls:'btn btn-primary', onclick:'sendTestSms()' }]); }
 async function sendTestSms() { const phone = document.getElementById('test-sms-phone').value.trim(); const msg = document.getElementById('test-sms-msg').value.trim(); if (!phone || !msg) { toast('Phone and message required', 'error'); return; } const result = await SMSService.send(phone, msg, null); if (result.ok) { toast(smsSettings.dryRun?'Test logged (dry-run)':'Test SMS sent'); closeModal(); navigate('settings'); } else toast('Test failed: ' + (result.error || 'unknown'), 'error'); }
 function clearSmsLog() { if (!confirm('Clear SMS log?')) return; SMSService.clearLog(); navigate('settings'); toast('Cleared'); }
 
@@ -1017,9 +1173,11 @@ async function saveProject(id) {
   } catch(e) { hideLoading(); console.error(e); toast('Failed: '+e.message, 'error'); }
 }
 
+// EDIT 8: Admin password gate for deleteProject
 async function deleteProject(id) {
   const p = findProject(id); if (!p) return;
   if (!confirm(`Delete "${p.name}"? Casuals, logs and budget will also be removed.`)) return;
+  if (!await requireAdminPassword('delete project ' + p.name)) return;
   showLoading('Deleting...');
   try {
     for (const c of DB.casuals.filter(x=>x.project_id===id)) await fsDelete('casuals', c.id);
@@ -1076,6 +1234,7 @@ async function saveFundRequest(projectId) {
   } catch(e) { hideLoading(); console.error(e); toast('Failed: '+e.message, 'error'); }
 }
 
+// EDIT 4: Approve funds — send SMS to BOTH TL and Admin
 async function approveFund(projectId, fundId) {
   const b = DB.budgets.find(x=>x.project_id===projectId); if (!b) return;
   const funds = [...(b.additional_funds||[])]; const f = funds.find(x=>x.id===fundId); if (!f) return;
@@ -1085,7 +1244,21 @@ async function approveFund(projectId, fundId) {
   try {
     await fsUpdate('budgets', projectId, { additional_funds: funds }); b.additional_funds = funds;
     auditLog('Approved Funds', `${fmtKES(n)} for ${findProject(projectId)?.name}`);
-    if (f.requested_by) { const tl = findTL(f.requested_by); const proj = findProject(projectId); if (tl) { const nid = await fsAdd('notifications', { recipient_id: tl.id, type:'fund_approved', title:'Funds Approved', message:`Your request of ${fmtKES(n)} for "${proj?.name}" was approved.`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); DB.notifications.unshift({ id:nid, recipient_id: tl.id, type:'fund_approved', title:'Funds Approved', message:`Your request of ${fmtKES(n)} for "${proj?.name}" was approved.`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); if (tl.phone) await SMSService.send(tl.phone, SMS.fundApproved(n, proj?.name||''), 'fundApproved'); } }
+    if (f.requested_by) { 
+      const tl = findTL(f.requested_by); 
+      const proj = findProject(projectId); 
+      if (tl) { 
+        const nid = await fsAdd('notifications', { recipient_id: tl.id, type:'fund_approved', title:'Funds Approved', message:`Your request of ${fmtKES(n)} for "${proj?.name}" was approved.`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); 
+        DB.notifications.unshift({ id:nid, recipient_id: tl.id, type:'fund_approved', title:'Funds Approved', message:`Your request of ${fmtKES(n)} for "${proj?.name}" was approved.`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); 
+        if (tl.phone) await SMSService.send(tl.phone, SMS.fundApproved(n, proj?.name||''), 'fundApproved'); 
+        // Notify admin too (release of money)
+        const adminUser = DB.users.find(u => u.role === 'admin');
+        if (adminUser?.phone) {
+          const msg = `RELEASE CONFIRMED: KES ${Number(n).toLocaleString()} released to ${tl.full_name||tl.username} for "${proj?.name}".`;
+          await SMSService.send(adminUser.phone, msg, 'fundApproved');
+        }
+      } 
+    }
     toast('Funds approved'); navigate(currentView, projectId);
   } catch(e) { console.error(e); toast('Failed: '+e.message, 'error'); }
 }
