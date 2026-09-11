@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEWL AFRICA · Projects · Teams · Financials</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{--primary:#1e6b3a;--primary-light:#2a8a4a;--primary-dark:#15502a;--primary-bg:#e6f4ec;--secondary:#1a6dff;--accent:#e67e22;--danger:#dc3545;--bg:#f6faf8;--surface:#fff;--border:#e8f0ec;--text:#1a2a24;--text-soft:#4d5f57;--text-light:#8a9f95;--radius:12px;--radius-lg:20px;--radius-pill:999px;--shadow-hover:0 8px 30px rgba(30,107,58,0.08);--shadow-lg:0 20px 60px rgba(21,80,42,0.10)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}::-webkit-scrollbar-thumb:hover{background:var(--primary-light)}
+.app-root{max-width:1440px;margin:0 auto;padding:0 16px 30px}
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 20% 15%,rgba(30,107,58,0.08),transparent 45%),var(--bg);padding:20px}
+.login-box{background:var(--surface);padding:40px 36px;border-radius:28px;box-shadow:var(--shadow-lg);border:1px solid var(--border);max-width:440px;width:100%}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.login-logo .mark{background:var(--primary);color:#fff;width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.login-tag{color:var(--text-soft);font-size:13px;margin:4px 0 22px;line-height:1.6}
+.login-tabs{display:flex;gap:4px;background:var(--bg);padding:4px;border-radius:var(--radius-pill);margin-bottom:20px}
+.login-tabs button{flex:1;padding:9px 10px;border:none;background:transparent;color:var(--text-soft);font-weight:600;font-size:12px;cursor:pointer;border-radius:var(--radius-pill);transition:all .2s;font-family:inherit}
+.login-tabs button.active{background:var(--surface);color:var(--primary);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.field{margin-bottom:14px}
+.field label{font-size:11px;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.field-row{grid-template-columns:1fr}}
+input,select,textarea{width:100%;padding:11px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:inherit;font-size:14px;transition:all .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(30,107,58,.12)}
+input[readonly]{background:var(--bg);color:var(--text-soft)}
+textarea{resize:vertical;min-height:70px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 20px;border-radius:var(--radius-pill);font-weight:600;font-size:13px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;transition:all .15s;text-decoration:none;font-family:inherit;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:var(--shadow-hover)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn-primary{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn-primary:hover:not(:disabled){background:var(--primary-dark);border-color:var(--primary-dark)}
+.btn-secondary{background:var(--secondary);border-color:var(--secondary);color:#fff}
+.btn-success{background:var(--primary-light);border-color:var(--primary-light);color:#fff}
+.btn-danger{color:var(--danger);border-color:#f5c6cb;background:var(--surface)}
+.btn-danger:hover:not(:disabled){background:#f8d7da;border-color:var(--danger)}
+.btn-outline{background:transparent;border-color:var(--border)}
+.btn-outline-primary{background:transparent;border-color:var(--primary);color:var(--primary)}
+.btn-outline-primary:hover:not(:disabled){background:var(--primary);color:#fff}
+.btn-sm{padding:6px 14px;font-size:12px}
+.btn-xs{padding:4px 10px;font-size:11px}
+.btn-block{width:100%}
+.btn .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);padding:18px 20px;transition:box-shadow .2s}
+.card-hover:hover{box-shadow:var(--shadow-hover)}
+.card-click{cursor:pointer}
+.metric-card .m-label{font-size:10px;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.05em}
+.metric-card .m-value{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-top:4px}
+.metric-card .m-value .highlight{color:var(--primary)}
+.metric-card .m-sub{font-size:11px;color:var(--text-soft);margin-top:2px}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 12px;border-radius:var(--radius-pill);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.badge::before{content:"";width:5px;height:5px;border-radius:50%}
+.badge-active{background:#e6f4ec;color:var(--primary)}.badge-active::before{background:var(--primary)}
+.badge-draft{background:var(--bg);color:var(--text-soft)}.badge-draft::before{background:var(--text-soft)}
+.badge-completed{background:#e3f0ff;color:var(--secondary)}.badge-completed::before{background:var(--secondary)}
+.badge-pending{background:#fff3e0;color:var(--accent)}.badge-pending::before{background:var(--accent)}
+.badge-paused{background:#fff3e0;color:var(--accent)}.badge-paused::before{background:var(--accent)}
+.badge-on_hold{background:var(--bg);color:var(--text-soft)}.badge-on_hold::before{background:var(--text-soft)}
+.badge-pending_approval{background:#fff3e0;color:var(--accent)}.badge-pending_approval::before{background:var(--accent)}
+.badge-approved{background:#e6f4ec;color:var(--primary)}.badge-approved::before{background:var(--primary)}
+.badge-rejected{background:#f8d7da;color:#721c24}.badge-rejected::before{background:var(--danger)}
+.badge-inactive{background:var(--bg);color:var(--text-soft)}.badge-inactive::before{background:var(--text-soft)}
+.badge-queued{background:var(--bg);color:var(--text-soft)}.badge-queued::before{background:var(--text-soft)}
+.badge-accepted{background:#e3f0ff;color:var(--secondary)}.badge-accepted::before{background:var(--secondary)}
+.badge-delivered{background:#e6f4ec;color:var(--primary)}.badge-delivered::before{background:var(--primary)}
+.badge-failed{background:#f8d7da;color:#721c24}.badge-failed::before{background:var(--danger)}
+.badge-dry_run{background:#fff3e0;color:var(--accent)}.badge-dry_run::before{background:var(--accent)}
+.badge-sent{background:#e6f4ec;color:var(--primary)}.badge-sent::before{background:var(--primary)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius-pill);font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text-soft);cursor:pointer;transition:all .15s}
+.chip.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.chip:hover:not(.active){background:var(--bg)}
+.chip .count{background:rgba(0,0,0,.06);padding:0 6px;border-radius:10px;font-size:10px;margin-left:2px}
+.chip.active .count{background:rgba(255,255,255,.25)}
+.grid{display:grid;gap:14px}
+.grid-2{grid-template-columns:1fr 1fr}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:1024px){.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.grid-4,.grid-3,.grid-2{grid-template-columns:1fr}}
+.app-shell{display:flex;gap:20px;margin-top:14px;align-items:flex-start}
+.main-area{flex:1;min-width:0}
+.sidebar{width:230px;flex-shrink:0;background:var(--surface);border-radius:var(--radius-lg);padding:18px 12px;border:1px solid var(--border);height:fit-content;position:sticky;top:14px;display:flex;flex-direction:column}
+.sidebar-logo{display:flex;align-items:center;gap:10px;padding:0 8px 14px;border-bottom:1px solid var(--border);margin-bottom:12px}
+.sidebar-logo .mark{background:var(--primary);color:#fff;width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.nav-list{display:flex;flex-direction:column;gap:2px}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--radius);font-weight:500;font-size:13px;color:var(--text-soft);transition:all .15s;cursor:pointer}
+.nav-item:hover{background:var(--bg);color:var(--text)}
+.nav-item.active{background:#e6f4ec;color:var(--primary);font-weight:600}
+.nav-item .icon{width:18px;text-align:center}
+.nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px}
+.sidebar-user{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sidebar-user .avatar{width:32px;height:32px;border-radius:10px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0}
+.sidebar-user .u-name{font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sidebar-user .u-role{font-size:10px;color:var(--text-soft)}
+.topbar{background:var(--surface);border-radius:var(--radius-lg);padding:10px 18px;border:1px solid var(--border);display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.topbar .search{flex:1;min-width:200px;display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:var(--radius-pill);padding:6px 16px}
+.topbar .search input{background:transparent;border:none;padding:6px 0;font-size:13px}
+.topbar .search input:focus{box-shadow:none;border:none}
+.topbar .tb-right{display:flex;gap:6px;align-items:center}
+.section-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.section-head h2{font-size:19px;font-weight:700;letter-spacing:-.02em}
+.section-head .sub{font-size:12px;color:var(--text-soft);margin-top:3px}
+.section-head .hash{color:var(--primary);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase}
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:11px 14px;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-soft);border-bottom:1px solid var(--border);font-weight:600;background:var(--bg);white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(30,107,58,.02)}
+.clickable-row{cursor:pointer}
+.clickable-row:hover{background:var(--primary-bg)!important}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .25s;padding:16px}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal{background:var(--surface);border-radius:22px;padding:24px;width:600px;max-width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.2);transform:translateY(10px) scale(.98);transition:transform .25s}
+.modal-overlay.open .modal{transform:translateY(0) scale(1)}
+.modal.wide{width:760px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:12px}
+.modal-head h3{font-size:17px;font-weight:700}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;flex-wrap:wrap}
+.modal-close{background:var(--bg);border:none;width:34px;height:34px;border-radius:10px;cursor:pointer;color:var(--text-soft);font-size:14px}
+.modal-close:hover{background:var(--border)}
+.toast-stack{position:fixed;bottom:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 40px)}
+.toast{padding:13px 18px;border-radius:14px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-weight:500;font-size:13px;min-width:240px;box-shadow:0 8px 32px rgba(0,0,0,.12);animation:toastIn .3s;border-left:3px solid var(--primary)}
+.toast.error{border-left-color:var(--danger)}
+.toast.info{border-left-color:var(--secondary)}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:16px;overflow-x:auto}
+.tab{padding:10px 16px;border:none;background:transparent;color:var(--text-soft);font-weight:600;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;font-family:inherit;white-space:nowrap}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.progress-bar{height:6px;background:var(--bg);border-radius:var(--radius-pill);overflow:hidden}
+.progress-bar .fill{height:100%;background:var(--primary);border-radius:var(--radius-pill);transition:width .4s}
+.cred-box{background:var(--bg);border:1px dashed var(--border);border-radius:12px;padding:12px 14px;font-family:ui-monospace,monospace;font-size:12px;color:var(--text);word-break:break-all;margin-top:6px;position:relative}
+.cred-box .copy{position:absolute;top:6px;right:6px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:3px 8px;font-size:10px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;color:var(--text-soft)}
+.cred-box .copy:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+.chart-box{position:relative;width:100%;height:240px;min-height:240px}
+.chart-box.tall{height:280px;min-height:280px}
+.chart-box canvas{display:block!important;width:100%!important;height:100%!important}
+.sms-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.sms-row:last-child{border-bottom:none}
+.switch{width:40px;height:22px;background:var(--border);border-radius:var(--radius-pill);position:relative;cursor:pointer;transition:.2s;flex-shrink:0}
+.switch.on{background:var(--primary)}
+.switch::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:3px;left:3px;transition:.2s}
+.switch.on::after{left:21px}
+.sms-log-item{padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px}
+.sms-log-item:last-child{border-bottom:none}
+.sms-log-item .sms-head{display:flex;justify-content:space-between;gap:8px;margin-bottom:4px}
+.sms-log-item .sms-to{font-weight:600;color:var(--text)}
+.sms-log-item .sms-time{color:var(--text-soft);font-size:11px}
+.sms-log-item .sms-msg{color:var(--text-soft);line-height:1.5;word-break:break-word}
+.sidebar-overlay{display:none}
+.menu-btn{display:none}
+@media(max-width:820px){
+  .app-shell{flex-direction:column}
+  .sidebar{position:fixed;left:0;top:0;z-index:100;height:100vh;width:260px;transform:translateX(-100%);transition:transform .25s;border-radius:0}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay{display:block;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:99;opacity:0;pointer-events:none;transition:opacity .25s}
+  .sidebar-overlay.open{opacity:1;pointer-events:auto}
+  .menu-btn{display:inline-flex!important}
+  .topbar .search{display:none}
+}
+@media(max-width:480px){.login-box{padding:28px 22px;border-radius:22px}.modal{padding:18px;border-radius:18px}.app-root{padding:0 10px 20px}}
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;z-index:999}
+.loading-overlay .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite}
+.loading-overlay .txt{font-size:13px;color:var(--text-soft);font-weight:500}
+.text-muted{color:var(--text-soft)}.text-primary{color:var(--primary)}.fw-600{font-weight:600}.fw-700{font-weight:700}
+.mb-0{margin-bottom:0}.mb-1{margin-bottom:4px}.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}
+.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}
+.d-flex{display:flex}.align-center{align-items:center}.justify-between{justify-content:space-between}
+.gap-2{gap:8px}.gap-3{gap:12px}.flex-wrap{flex-wrap:wrap}
+.hidden{display:none!important}
+.empty-state{padding:40px;text-align:center;color:var(--text-soft)}
+.empty-state i{font-size:32px;margin-bottom:12px;opacity:.4;display:block}
+.empty-state .msg{font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay" style="display:none"><div class="spinner"></div><div class="txt" id="loadingText">Loading...</div></div>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo"><div class="mark"><i class="fas fa-tower-cell"></i></div><div><b style="font-size:18px;">NEWL AFRICA</b></div></div>
+    <p class="login-tag">Projects · Teams · Daily Logs · Financials — unified</p>
+    <div class="login-tabs">
+      <button class="active" data-tab="admin" onclick="switchLoginTab('admin')">Admin</button>
+      <button data-tab="team_leader" onclick="switchLoginTab('team_leader')">Team Leader</button>
+    </div>
+    <form id="adminForm" onsubmit="handleLogin(event,'admin')">
+      <div class="field"><label>Username</label><input id="adminUser" placeholder="Enter username" autocomplete="username"></div>
+      <div class="field"><label>Password</label><input type="password" id="adminPass" placeholder="Password" autocomplete="current-password"></div>
+      <button type="submit" class="btn btn-primary btn-block" id="adminLoginBtn"><span>Sign In</span></button>
+    </form>
+    <form id="tlForm" style="display:none" onsubmit="handleLogin(event,'team_leader')">
+      <div class="field"><label>Username</label><input id="tlUser" placeholder="e.g. tl.kenjuma" autocomplete="username"></div>
+      <div class="field"><label>Password</label><input type="password" id="tlPass" placeholder="Password" autocomplete="current-password"></div>
+      <button type="submit" class="btn btn-primary btn-block" id="tlLoginBtn"><span>Sign In</span></button>
+    </form>
+  </div>
+</div>
+
+<div class="app-root" id="appRoot" style="display:none">
+  <div class="app-shell">
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo"><div class="mark"><i class="fas fa-tower-cell"></i></div><div><b>NEWL AFRICA</b><div style="font-size:9px;color:var(--text-soft);letter-spacing:.05em;">MANAGEMENT</div></div></div>
+      <nav class="nav-list" id="navList"></nav>
+      <div class="sidebar-user">
+        <div class="avatar" id="sideAvatar">U</div>
+        <div style="flex:1;min-width:0;"><div class="u-name" id="sideName">User</div><div class="u-role" id="sideRole">Role</div></div>
+        <button class="btn btn-xs btn-outline" onclick="logout()" title="Sign out"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
+    </aside>
+    <div class="main-area">
+      <header class="topbar">
+        <button class="btn btn-sm menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <div class="search"><i class="fas fa-search" style="color:var(--text-soft);font-size:13px;"></i><input id="globalSearch" placeholder="Search projects, SMP, PO, people..." oninput="onGlobalSearch(this.value)"></div>
+        <div class="tb-right"><button class="btn btn-sm btn-outline" onclick="navigate('notifications')" title="Notifications"><i class="fas fa-bell"></i><span id="notifDot" class="nav-badge" style="display:none">0</span></button></div>
+      </header>
+      <div id="viewArea"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+<div id="modalRoot"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword }
+    from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+  import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAOh9hZWXwboWnMZQhzQpP4ElALTHWnyR0",
+    authDomain: "newl-africa.firebaseapp.com",
+    projectId: "newl-africa",
+    storageBucket: "newl-africa.firebasestorage.app",
+    messagingSenderId: "665008719347",
+    appId: "1:665008719347:web:7567c70477973b2b06be86"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  window.firebaseApp = app;
+  window.firebaseAuth = auth;
+  window.firebaseDb = db;
+  window.fbAuth = { signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword };
+  window.fbDb = { collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp };
+
+  window.dispatchEvent(new Event('firebase-ready'));
+  console.log('🔥 Firebase initialized for newl-africa');
+</script>
+
+<script>
+const SMS_SETTINGS_KEY = 'newl_sms_settings_v1';
+const APP_URL = window.location.origin + window.location.pathname;
+const LOGIN_URL = APP_URL;
+const DEFAULT_WORKER_URL = 'https://newl-sms.manchamdevelopers.workers.dev';
+
+let DB = { users: [], projects: [], casuals: [], daily_logs: [], budgets: [], notifications: [], audit: [] };
+let currentUser = null;
+let firebaseUser = null;
+let currentView = 'home';
+let _searchTerm = '';
+let _charts = {};
+
+const SMS_DEFAULTS = {
+  provider: 'cloudflare', senderId: 'MOBILESASA', dryRun: false, workerUrl: DEFAULT_WORKER_URL,
+  events: {
+    tlWelcome: true, tlProjectAssigned: true, tlProjectRemoved: true, tlPasswordReset: true,
+    fundRequested: true, fundApproved: true, fundDeclined: true, logSubmitted: true,
+    projectCompleted: true, projectApproved: true, projectReturned: true,
+    casualAddedToCasual: true, casualAddedToAdmin: true,
+    casualRemovedFromCasual: true, casualRemovedFromAdmin: true
+  }
+};
+let smsSettings = null;
+function loadSmsSettings() {
+  try { const raw = localStorage.getItem(SMS_SETTINGS_KEY); if (raw) { smsSettings = { ...SMS_DEFAULTS, ...JSON.parse(raw) }; if (!smsSettings.workerUrl) smsSettings.workerUrl = DEFAULT_WORKER_URL; return; } } catch(e){}
+  smsSettings = JSON.parse(JSON.stringify(SMS_DEFAULTS));
+}
+function saveSmsSettings() { try { localStorage.setItem(SMS_SETTINGS_KEY, JSON.stringify(smsSettings)); } catch(e){} }
+function smsEventEnabled(k) { return smsSettings?.events?.[k] !== false; }
+
+const SMSService = {
+  _log: [],
+  async send(phone, message, eventKey) {
+    if (!phone || !message) return { ok:false, error:'missing' };
+    if (eventKey && !smsEventEnabled(eventKey)) return { ok:true, skipped:true };
+    const normalized = this._normalizePhone(phone);
+    if (!normalized) { this._log.unshift({ to: phone, message, status:'failed', error:'invalid_phone', at: Date.now(), eventKey }); return { ok:false, error:'invalid_phone' }; }
+    const trackingId = 'sms_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+    const entry = { to: normalized, message, at: Date.now(), eventKey, trackingId, status:'pending' };
+    this._log.unshift(entry);
+    if (this._log.length > 300) this._log.pop();
+    if (smsSettings.dryRun) { entry.status = 'dry_run'; console.log('[SMS DRY RUN]', entry); return { ok:true, dryRun:true, trackingId }; }
+    if (!smsSettings.workerUrl) { entry.status = 'failed'; entry.error = 'no_worker_url'; return { ok:false, error:'no_worker_url' }; }
+    try {
+      const res = await fetch(smsSettings.workerUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: normalized, message, senderId: smsSettings.senderId }) });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) { entry.status = 'failed'; entry.error = data.error || res.statusText || 'send_failed'; console.error('[SMS] Failed:', entry.error, data); return { ok:false, error: entry.error }; }
+      entry.status = 'sent'; entry.response = data.data;
+      console.log('[SMS] Sent to', normalized);
+      return { ok:true, data: data.data };
+    } catch(e) { entry.status = 'failed'; entry.error = e.message; console.error('[SMS] Network error:', e); return { ok:false, error: e.message }; }
+  },
+  _normalizePhone(p) { const d = String(p).replace(/\D/g,''); if (d.startsWith('254') && d.length===12) return d; if (d.startsWith('0') && d.length===10) return '254' + d.slice(1); if ((d.startsWith('7')||d.startsWith('1')) && d.length===9) return '254' + d; return null; },
+  log() { return this._log.slice(); }, clearLog() { this._log = []; }
+};
+
+const SMS = {
+  tlWelcome: (n,u,p) => `Welcome ${n}. You are now a Team Leader at NEWL AFRICA. Login: ${LOGIN_URL} Username: ${u} Password: ${p}`,
+  tlProjectAssigned: (n,proj,smp,po) => `${n}, you have been assigned to "${proj}"${smp?' (SMP '+smp+')':''}${po?' (PO '+po+')':''}. Login: ${LOGIN_URL}`,
+  tlProjectRemoved: (proj) => `You have been removed from "${proj}". Contact admin if unexpected.`,
+  tlPasswordReset: (np) => `Your NEWL AFRICA password has been reset. New password: ${np}. Login: ${LOGIN_URL}`,
+  fundRequested: (tl,proj,amt,reason) => `${tl} requested KES ${Number(amt).toLocaleString()} on "${proj}". Reason: ${reason}`.slice(0,160),
+  fundApproved: (amt,proj) => `Your request of KES ${Number(amt).toLocaleString()} on "${proj}" was APPROVED. Login: ${LOGIN_URL}`,
+  fundDeclined: (amt,proj,reason) => `Your request of KES ${Number(amt).toLocaleString()} on "${proj}" was DECLINED.${reason?' Reason: '+reason:''}`.slice(0,160),
+  logSubmitted: (tl,proj,date,hrs,sum) => `${tl} submitted log for "${proj}" on ${date}. ${hrs}h - ${sum}`.slice(0,160),
+  projectCompleted: (tl,proj) => `${tl} marked "${proj}" COMPLETE. Review at ${LOGIN_URL}`,
+  projectApproved: (proj) => `Project "${proj}" has been approved and marked complete.`,
+  projectReturned: (proj,reason) => `Project "${proj}" was sent back.${reason?' Reason: '+reason:''}`,
+  casualAdded: (n,proj,tl) => `Hi ${n}, you have been added to "${proj}" by ${tl}. Report to site supervisor.`,
+  casualAddedAdmin: (tl,cn,ph,proj) => `${tl} added casual ${cn} (${ph}) to "${proj}"`,
+  casualRemoved: (n,proj,tl) => `Hi ${n}, you have been removed from "${proj}". Contact ${tl} for details.`,
+  casualRemovedAdmin: (tl,cn,proj) => `${tl} removed casual ${cn} from "${proj}"`,
+  test: () => `Test message from NEWL AFRICA. If you received this, SMS is working. ${new Date().toLocaleString('en-GB')}`
+};
+
+function toast(msg, type='info') {
+  const stack = document.getElementById('toastStack');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = msg;
+  stack.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(8px)'; t.style.transition='all .25s'; setTimeout(() => t.remove(), 300); }, 3200);
+}
+function escapeHtml(s) { return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]); }
+function fmtKES(n) { if (n==null||isNaN(n)) return 'KES 0'; const neg = n < 0; const v = 'KES ' + Math.abs(Number(n)).toLocaleString('en-KE'); return neg ? '-' + v : v; }
+function fmtDate(ts) { if (!ts) return '—'; const d = ts.toDate ? ts.toDate() : new Date(ts); return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+function fmtDateInput(ts) { if (!ts) return ''; const d = ts.toDate ? ts.toDate() : new Date(ts); const p = n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`; }
+function fromDateInput(v) { if (!v) return null; const [y,m,d]=v.split('-').map(Number); return new Date(y,m-1,d).getTime(); }
+function tsToMillis(ts) { if (!ts) return 0; if (ts.toDate) return ts.toDate().getTime(); if (typeof ts === 'number') return ts; return new Date(ts).getTime(); }
+function timeAgo(ts) { const t = tsToMillis(ts); const s = Math.floor((Date.now()-t)/1000); if (s<60) return 'just now'; if (s<3600) return Math.floor(s/60)+'m ago'; if (s<86400) return Math.floor(s/3600)+'h ago'; if (s<604800) return Math.floor(s/86400)+'d ago'; return fmtDate(ts); }
+function initials(n) { return (n||'U').split(' ').filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join(''); }
+function genPassword() { const c='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789'; let o='NLA-'; for(let i=0;i<6;i++)o+=c[Math.floor(Math.random()*c.length)]; return o; }
+function findProject(id) { return DB.projects.find(p=>p.id===id); }
+function findTL(id) { return DB.users.find(u=>u.id===id); }
+function findCasual(id) { return DB.casuals.find(c=>c.id===id); }
+function projectBudget(pid) { return DB.budgets.find(b=>b.project_id===pid) || { id:null, project_id:pid, allocated:0, expenditure:[], additional_funds:[] }; }
+function projectTotals(pid) {
+  const p = findProject(pid);
+  const b = projectBudget(pid);
+  const allocated = p ? (p.budget||0) : 0;
+  const spent = (b.expenditure||[]).reduce((s,e)=>s+(e.amount||0),0);
+  const approvedFunds = (b.additional_funds||[]).filter(f=>f.status==='approved').reduce((s,f)=>s+(f.approved_amount||0),0);
+  const pendingFunds = (b.additional_funds||[]).filter(f=>f.status==='pending').reduce((s,f)=>s+(f.amount||0),0);
+  const remaining = allocated - spent - approvedFunds;
+  return { allocated, spent, approvedFunds, pendingFunds, remaining };
+}
+function projectProgress(pid) {
+  const p = findProject(pid); if (!p) return { total:0, completed:0, pct:0 };
+  if (p.status==='completed') return { total:1, completed:1, pct:100 };
+  const logs = DB.daily_logs.filter(l=>l.project_id===pid).length;
+  const pct = Math.min(90, logs*8 + (p.status==='active'?10:0));
+  return { total:0, completed:0, pct };
+}
+
+function showLoading(txt) { document.getElementById('loadingText').textContent = txt || 'Loading...'; document.getElementById('loadingOverlay').style.display='flex'; }
+function hideLoading() { document.getElementById('loadingOverlay').style.display='none'; }
+
+async function loadAllData() {
+  showLoading('Loading your data...');
+  try {
+    const { collection, getDocs } = window.fbDb;
+    const db = window.firebaseDb;
+    const [usersSnap, projectsSnap, casualsSnap, logsSnap, budgetsSnap, notifsSnap, auditSnap] = await Promise.all([
+      getDocs(collection(db, 'users')), getDocs(collection(db, 'projects')), getDocs(collection(db, 'casuals')),
+      getDocs(collection(db, 'daily_logs')), getDocs(collection(db, 'budgets')), getDocs(collection(db, 'notifications')), getDocs(collection(db, 'audit'))
+    ]);
+    DB.users = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    DB.projects = projectsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    DB.casuals = casualsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    DB.daily_logs = logsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    DB.budgets = budgetsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    DB.notifications = notifsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    DB.audit = auditSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    console.log('📦 Loaded:', { users: DB.users.length, projects: DB.projects.length, casuals: DB.casuals.length, logs: DB.daily_logs.length, budgets: DB.budgets.length, notifications: DB.notifications.length, audit: DB.audit.length });
+  } catch(e) { console.error('Load failed:', e); toast('Failed to load data: ' + e.message, 'error'); }
+  finally { hideLoading(); }
+}
+
+async function fsAdd(collectionName, data) { const { collection, addDoc, serverTimestamp } = window.fbDb; const ref = await addDoc(collection(window.firebaseDb, collectionName), { ...data, created_at: serverTimestamp() }); return ref.id; }
+async function fsSet(collectionName, docId, data) { const { doc, setDoc, serverTimestamp } = window.fbDb; await setDoc(doc(window.firebaseDb, collectionName, docId), { ...data, updated_at: serverTimestamp() }, { merge: true }); }
+async function fsUpdate(collectionName, docId, data) { const { doc, updateDoc, serverTimestamp } = window.fbDb; await updateDoc(doc(window.firebaseDb, collectionName, docId), { ...data, updated_at: serverTimestamp() }); }
+async function fsDelete(collectionName, docId) { const { doc, deleteDoc } = window.fbDb; await deleteDoc(doc(window.firebaseDb, collectionName, docId)); }
+
+function switchLoginTab(tab) { document.querySelectorAll('.login-tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === tab)); document.getElementById('adminForm').style.display = tab === 'admin' ? 'block' : 'none'; document.getElementById('tlForm').style.display = tab === 'team_leader' ? 'block' : 'none'; }
+
+async function handleLogin(e, role) {
+  e.preventDefault();
+  const btn = role === 'admin' ? document.getElementById('adminLoginBtn') : document.getElementById('tlLoginBtn');
+  const original = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Signing in...';
+  const usernameInput = role === 'admin' ? 'adminUser' : 'tlUser';
+  const passwordInput = role === 'admin' ? 'adminPass' : 'tlPass';
+  const username = document.getElementById(usernameInput).value.trim();
+  const password = document.getElementById(passwordInput).value;
+  if (!username || !password) { btn.disabled = false; btn.innerHTML = original; toast('Username and password required', 'error'); return; }
+  const email = username.includes('@') ? username : username + '@newl.africa';
+  try {
+    const cred = await window.fbAuth.signInWithEmailAndPassword(window.firebaseAuth, email, password);
+    firebaseUser = cred.user;
+    const { doc, getDoc } = window.fbDb;
+    const userSnap = await getDoc(doc(window.firebaseDb, 'users', cred.user.uid));
+    if (!userSnap.exists()) { await window.fbAuth.signOut(window.firebaseAuth); throw new Error('Your account has no profile. Contact admin.'); }
+    const profile = { id: userSnap.id, ...userSnap.data() };
+    if (profile.role !== role) { await window.fbAuth.signOut(window.firebaseAuth); throw new Error(`This account is not a ${role.replace('_',' ')}.`); }
+    currentUser = { ...profile, type: profile.role };
+    await loadAllData();
+    enterApp();
+  } catch(err) { console.error(err); let msg = err.message || 'Login failed'; if (msg.includes('auth/invalid-credential') || msg.includes('auth/wrong-password') || msg.includes('auth/user-not-found')) msg = 'Invalid credentials'; toast(msg, 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = original; }
+}
+
+async function logout() { try { await window.fbAuth.signOut(window.firebaseAuth); } catch(e){} currentUser = null; firebaseUser = null; document.getElementById('appRoot').style.display = 'none'; document.getElementById('loginScreen').style.display = 'flex'; }
+
+async function restoreSession() {
+  return new Promise((resolve) => {
+    const unsubscribe = window.fbAuth.onAuthStateChanged(window.firebaseAuth, async (fbUser) => {
+      unsubscribe();
+      if (!fbUser) return resolve(false);
+      try {
+        const { doc, getDoc } = window.fbDb;
+        const snap = await getDoc(doc(window.firebaseDb, 'users', fbUser.uid));
+        if (!snap.exists()) { await window.fbAuth.signOut(window.firebaseAuth); return resolve(false); }
+        const profile = { id: snap.id, ...snap.data() };
+        currentUser = { ...profile, type: profile.role };
+        firebaseUser = fbUser;
+        await loadAllData();
+        enterApp();
+        resolve(true);
+      } catch(e) { console.error(e); resolve(false); }
+    });
+  });
+}
+
+function enterApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appRoot').style.display = 'block';
+  document.getElementById('sideName').textContent = currentUser.full_name || currentUser.username;
+  document.getElementById('sideRole').textContent = currentUser.type === 'admin' ? 'Administrator' : 'Team Leader';
+  document.getElementById('sideAvatar').textContent = initials(currentUser.full_name || currentUser.username);
+  buildNav();
+  navigate('home');
+  updateNotifBadge();
+}
+
+function navItems() {
+  if (currentUser.type === 'admin') {
+    const pendingFunds = DB.budgets.reduce((s,b) => s + (b.additional_funds||[]).filter(f=>f.status==='pending').length, 0);
+    const pendingApprovals = DB.projects.filter(p => p.status === 'pending_approval').length;
+    return [
+      { key:'home', label:'Home', icon:'<i class="fas fa-home"></i>' },
+      { key:'projects', label:'Projects', icon:'<i class="fas fa-folder"></i>', badge: pendingApprovals || null },
+      { key:'team-leaders', label:'Team Leaders', icon:'<i class="fas fa-user-tie"></i>' },
+      { key:'financials', label:'Financials', icon:'<i class="fas fa-wallet"></i>', badge: pendingFunds || null },
+      { key:'logs', label:'Daily Logs', icon:'<i class="fas fa-clipboard-list"></i>' },
+      { key:'casuals', label:'All Casuals', icon:'<i class="fas fa-users"></i>' },
+      { key:'notifications', label:'Notifications', icon:'<i class="fas fa-bell"></i>' },
+      { key:'audit', label:'Audit Log', icon:'<i class="fas fa-history"></i>' },
+      { key:'settings', label:'Settings', icon:'<i class="fas fa-cog"></i>' }
+    ];
+  }
+  return [
+    { key:'home', label:'My Projects', icon:'<i class="fas fa-folder"></i>' },
+    { key:'casuals', label:'My Casuals', icon:'<i class="fas fa-users"></i>' },
+    { key:'logs', label:'Daily Logs', icon:'<i class="fas fa-clipboard-list"></i>' },
+    { key:'funds', label:'Fund Requests', icon:'<i class="fas fa-coins"></i>' },
+    { key:'notifications', label:'Notifications', icon:'<i class="fas fa-bell"></i>' },
+    { key:'settings', label:'Settings', icon:'<i class="fas fa-cog"></i>' }
+  ];
+}
+
+function buildNav() { const items = navItems(); document.getElementById('navList').innerHTML = items.map(i => `<div class="nav-item" data-view="${i.key}" onclick="navigate('${i.key}')"><span class="icon">${i.icon}</span><span>${i.label}</span>${i.badge ? `<span class="nav-badge">${i.badge}</span>` : ''}</div>`).join(''); }
+
+function navigate(view, param) {
+  currentView = view;
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === view));
+  closeSidebar();
+  const area = document.getElementById('viewArea');
+  let html = '';
+  try {
+    switch(view) {
+      case 'home': html = currentUser.type === 'admin' ? renderAdminHome() : renderTLHome(); break;
+      case 'projects': html = renderProjects(); break;
+      case 'project-detail': html = renderProjectDetail(param); break;
+      case 'team-leaders': html = renderTeamLeaders(); break;
+      case 'casuals': html = renderCasuals(); break;
+      case 'logs': html = renderLogs(); break;
+      case 'financials': html = renderFinancials(); break;
+      case 'funds': html = renderFunds(); break;
+      case 'notifications': html = renderNotifications(); break;
+      case 'audit': html = renderAudit(); break;
+      case 'settings': html = renderSettings(); break;
+      default: html = '<div class="card">View not found</div>';
+    }
+  } catch(e) { console.error(e); html = `<div class="card" style="color:var(--danger)">Error: ${escapeHtml(e.message)}</div>`; }
+  area.innerHTML = html;
+  window.scrollTo({top:0, behavior:'smooth'});
+  updateNotifBadge();
+  destroyCharts();
+  if (view === 'financials' && currentUser.type === 'admin') requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(renderFinancialCharts, 80)));
+}
+
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('open'); }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); }
+function destroyCharts() { Object.values(_charts).forEach(c=>{try{c.destroy();}catch(e){}}); _charts = {}; }
+
+function renderAdminHome() {
+  const totalProjects = DB.projects.length;
+  const activeProjects = DB.projects.filter(p => p.status === 'active').length;
+  const totalTLs = DB.users.filter(u => u.role === 'team_leader').length;
+  const totalCasuals = DB.casuals.filter(c => c.active).length;
+  const totalBudget = DB.projects.reduce((s,p) => s + (p.budget||0), 0);
+  const totalSpent = DB.budgets.reduce((s,b) => s + (b.expenditure||[]).reduce((x,e)=>x+(e.amount||0),0), 0);
+  const totalApprovedFunds = DB.budgets.reduce((s,b) => s + (b.additional_funds||[]).filter(f=>f.status==='approved').reduce((x,f)=>x+(f.approved_amount||0),0), 0);
+  const totalRemaining = totalBudget - totalSpent - totalApprovedFunds;
+  const pendingFunds = DB.budgets.reduce((s,b) => s + (b.additional_funds||[]).filter(f=>f.status==='pending').length, 0);
+  const pendingApprovals = DB.projects.filter(p => p.status === 'pending_approval').length;
+  const myNotifs = myNotifications().filter(n => !n.read);
+  const recentAudit = DB.audit.slice().sort((a,b)=>tsToMillis(b.at)-tsToMillis(a.at)).slice(0,6);
+  if (!DB.projects.length && !DB.users.filter(u=>u.role==='team_leader').length) {
+    return `<div class="section-head"><div><span class="hash"># Welcome</span><h2>Welcome, ${escapeHtml((currentUser.full_name||'').split(' ')[0] || currentUser.username)}</h2><div class="sub">Let's get started. Create your first team leader and project.</div></div></div>
+      <div class="card" style="padding:40px;text-align:center"><i class="fas fa-tower-cell" style="font-size:48px;color:var(--primary);margin-bottom:16px"></i><h3 style="margin-bottom:8px">Firebase is connected ✓</h3><p style="color:var(--text-soft);margin-bottom:20px;font-size:14px">Your database is empty. Add your first team leader or project to begin.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn btn-primary" onclick="openTLModal()"><i class="fas fa-user-tie"></i> Add First Team Leader</button><button class="btn btn-outline-primary" onclick="openProjectModal()"><i class="fas fa-plus"></i> Create First Project</button></div></div>`;
+  }
+  return `
+    <div class="section-head"><div><span class="hash"># Overview</span><h2>Welcome, ${escapeHtml((currentUser.full_name||'').split(' ')[0] || currentUser.username)}</h2><div class="sub">${activeProjects} active projects - ${totalTLs} team leaders - ${totalCasuals} casuals on duty</div></div><div style="display:flex;gap:8px;flex-wrap:wrap;"><button class="btn btn-primary" onclick="openProjectModal()"><i class="fas fa-plus"></i> New Project</button><button class="btn btn-outline-primary" onclick="openTLModal()"><i class="fas fa-user-tie"></i> Add Team Leader</button></div></div>
+    ${(pendingFunds || pendingApprovals) ? `<div class="card" style="border-left:3px solid var(--accent);margin-bottom:16px;padding:14px 18px"><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><i class="fas fa-exclamation-circle" style="color:var(--accent);font-size:18px"></i><div style="flex:1;min-width:0"><b>Needs your attention:</b> ${pendingFunds ? `${pendingFunds} fund request${pendingFunds>1?'s':''}` : ''} ${pendingFunds && pendingApprovals ? ' - ' : ''} ${pendingApprovals ? `${pendingApprovals} project approval${pendingApprovals>1?'s':''}` : ''}</div><button class="btn btn-sm btn-primary" onclick="navigate('financials')">Review</button></div></div>` : ''}
+    <div class="grid grid-4">
+      <div class="card metric-card"><div class="m-label">Projects</div><div class="m-value"><span class="highlight">${totalProjects}</span></div><div class="m-sub">${activeProjects} active</div></div>
+      <div class="card metric-card"><div class="m-label">Total Budget</div><div class="m-value"><span class="highlight">${fmtKES(totalBudget)}</span></div><div class="m-sub">Spent: ${fmtKES(totalSpent + totalApprovedFunds)}</div></div>
+      <div class="card metric-card"><div class="m-label">Remaining (all projects)</div><div class="m-value" style="color:${totalRemaining>=0?'var(--primary)':'var(--danger)'}">${fmtKES(totalRemaining)}</div><div class="m-sub">after all outflow</div></div>
+      <div class="card metric-card"><div class="m-label">Unread</div><div class="m-value"><span class="highlight">${myNotifs.length}</span></div><div class="m-sub">notifications</div></div>
+    </div>
+    <div class="grid grid-2 mt-4">
+      <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h4 style="font-size:14px">Active Projects</h4><button class="btn btn-xs btn-outline" onclick="navigate('projects')">View all</button></div>
+        ${DB.projects.filter(p => p.status==='active' || p.status==='pending_approval').slice(0,5).map(p => { const t = projectTotals(p.id); const tl = findTL(p.team_leader_id); const prog = projectProgress(p.id); return `<div style="padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="navigate('project-detail','${p.id}')"><div style="display:flex;justify-content:space-between;gap:8px"><div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13px">${escapeHtml(p.name)}</div><div style="font-size:11px;color:var(--text-soft)">SMP ${escapeHtml(p.smp||'-')}${p.po_number?' - '+escapeHtml(p.po_number):''} - TL: ${tl?escapeHtml(tl.full_name||tl.username):'-'}</div></div><span class="badge badge-${p.status}">${p.status.replace('_',' ')}</span></div><div class="progress-bar" style="margin-top:6px"><div class="fill" style="width:${prog.pct}%"></div></div><div style="font-size:11px;color:var(--text-soft);margin-top:4px">Remaining: <b style="color:${t.remaining>=0?'var(--primary)':'var(--danger)'}">${fmtKES(t.remaining)}</b></div></div>`; }).join('') || '<div style="text-align:center;padding:20px;color:var(--text-soft);font-size:13px">No active projects</div>'}
+      </div>
+      <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h4 style="font-size:14px">Recent Activity</h4><button class="btn btn-xs btn-outline" onclick="navigate('audit')">View all</button></div>
+        ${recentAudit.map(a => `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:12px"><div><b>${escapeHtml(a.user||'system')}</b> - ${escapeHtml(a.action||'')}</div><div style="color:var(--text-soft);font-size:11px">${escapeHtml(a.desc||'')} - ${timeAgo(a.at)}</div></div>`).join('') || '<div style="text-align:center;padding:20px;color:var(--text-soft);font-size:13px">No activity</div>'}
+      </div>
+    </div>`;
+}
+
+function renderTLHome() {
+  const myProjects = DB.projects.filter(p => p.team_leader_id === currentUser.id);
+  const myCasuals = DB.casuals.filter(c => myProjects.some(p => p.id === c.project_id) && c.active);
+  const myLogs = DB.daily_logs.filter(l => l.submitted_by === currentUser.id);
+  const myNotifs = myNotifications().filter(n => !n.read);
+  if (!myProjects.length) { return `<div class="section-head"><div><span class="hash"># My Work</span><h2>Hello, ${escapeHtml((currentUser.full_name||'').split(' ')[0] || currentUser.username)}</h2><div class="sub">You are signed in as a Team Leader</div></div></div><div class="card" style="padding:40px;text-align:center"><i class="fas fa-hourglass-half" style="font-size:48px;color:var(--accent);margin-bottom:16px"></i><h3 style="margin-bottom:8px">No projects assigned yet</h3><p style="color:var(--text-soft);font-size:14px">Your admin will assign you projects.</p></div>`; }
+  return `
+    <div class="section-head"><div><span class="hash"># My Work</span><h2>Hello, ${escapeHtml((currentUser.full_name||'').split(' ')[0] || currentUser.username)}</h2><div class="sub">${myProjects.length} projects - ${myCasuals.length} casuals on your sites</div></div></div>
+    <div class="grid grid-4">
+      <div class="card metric-card"><div class="m-label">My Projects</div><div class="m-value"><span class="highlight">${myProjects.length}</span></div></div>
+      <div class="card metric-card"><div class="m-label">My Casuals</div><div class="m-value"><span class="highlight">${myCasuals.length}</span></div></div>
+      <div class="card metric-card"><div class="m-label">Logs Submitted</div><div class="m-value"><span class="highlight">${myLogs.length}</span></div></div>
+      <div class="card metric-card"><div class="m-label">Unread</div><div class="m-value"><span class="highlight">${myNotifs.length}</span></div></div>
+    </div>
+    <div class="section-head mt-4"><h4 style="font-size:15px">My Projects</h4><button class="btn btn-sm btn-outline-primary" onclick="openDailyLogModal()"><i class="fas fa-plus"></i> Submit Daily Log</button></div>
+    <div class="grid grid-2">
+      ${myProjects.map(p => { const prog = projectProgress(p.id); const projCasuals = DB.casuals.filter(c => c.project_id === p.id && c.active).length; return `<div class="card card-click card-hover" onclick="navigate('project-detail','${p.id}')"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:15px">${escapeHtml(p.name)}</div><div style="font-size:11px;color:var(--text-soft);margin-top:3px">SMP <b>${escapeHtml(p.smp||'-')}</b>${p.po_number?' - PO <b>'+escapeHtml(p.po_number)+'</b>':''}</div><div style="font-size:11px;color:var(--text-soft)">${escapeHtml(p.site_module_package||'')}</div></div><span class="badge badge-${p.status}">${p.status.replace('_',' ')}</span></div><div class="progress-bar" style="margin-top:10px"><div class="fill" style="width:${prog.pct}%"></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-soft);margin-top:6px"><span>${projCasuals} casuals</span><span>${p.location?escapeHtml(p.location):''}</span></div></div>`; }).join('')}
+    </div>`;
+}
+
+let _projFilter = 'all'; let _projSearch = '';
+
+function renderProjects() {
+  let list = DB.projects.slice();
+  if (currentUser.type === 'team_leader') list = list.filter(p => p.team_leader_id === currentUser.id);
+  if (_projFilter !== 'all') list = list.filter(p => p.status === _projFilter);
+  if (_projSearch.trim()) { const q = _projSearch.toLowerCase(); list = list.filter(p => (p.name||'').toLowerCase().includes(q) || (p.smp||'').toLowerCase().includes(q) || (p.po_number||'').toLowerCase().includes(q) || (p.site_module_package||'').toLowerCase().includes(q)); }
+  const base = DB.projects.filter(p => currentUser.type==='admin' || p.team_leader_id===currentUser.id);
+  const counts = { all: base.length, active: base.filter(p=>p.status==='active').length, pending_approval: base.filter(p=>p.status==='pending_approval').length, completed: base.filter(p=>p.status==='completed').length, on_hold: base.filter(p=>p.status==='on_hold').length, draft: base.filter(p=>p.status==='draft').length };
+  return `
+    <div class="section-head"><div><span class="hash"># Portfolio</span><h2>Projects</h2><div class="sub">${list.length} of ${counts.all} shown</div></div>${currentUser.type === 'admin' ? `<button class="btn btn-primary" onclick="openProjectModal()"><i class="fas fa-plus"></i> New Project</button>` : ''}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">${['all','active','pending_approval','completed','on_hold','draft'].map(s => `<span class="chip ${_projFilter===s?'active':''}" onclick="_projFilter='${s}';navigate('projects')">${s.replace('_',' ')} <span class="count">${counts[s]||0}</span></span>`).join('')}</div>
+    <div class="card" style="padding:12px 16px;margin-bottom:14px"><input id="projSearchInput" placeholder="Search by name, SMP, PO, module package..." value="${escapeHtml(_projSearch)}" oninput="_projSearch=this.value;navigate('projects')"></div>
+    ${list.length ? `<div class="grid grid-3">${list.map(p => { const t = projectTotals(p.id); const prog = projectProgress(p.id); const tl = findTL(p.team_leader_id); return `<div class="card card-click card-hover" onclick="navigate('project-detail','${p.id}')"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px">${escapeHtml(p.name)}</div><div style="font-size:11px;color:var(--text-soft);margin-top:4px">SMP: <b>${escapeHtml(p.smp||'-')}</b></div>${p.po_number?`<div style="font-size:11px;color:var(--text-soft)">PO: <b>${escapeHtml(p.po_number)}</b></div>`:''}<div style="font-size:11px;color:var(--text-soft)">${escapeHtml(p.site_module_package||'')}</div></div><span class="badge badge-${p.status}">${p.status.replace('_',' ')}</span></div><div style="font-size:12px;margin-top:8px"><i class="fas fa-user-tie" style="color:var(--text-soft)"></i> ${tl?escapeHtml(tl.full_name||tl.username):'-'}</div><div class="progress-bar" style="margin-top:8px"><div class="fill" style="width:${prog.pct}%"></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-soft);margin-top:6px"><span>Budget: ${fmtKES(t.allocated)}</span><span style="color:${t.remaining>=0?'var(--primary)':'var(--danger)'};font-weight:600">Rem: ${fmtKES(t.remaining)}</span></div></div>`; }).join('')}</div>` : `<div class="card empty-state"><i class="fas fa-folder-open"></i><div class="msg">No projects match your filters</div></div>`}`;
+}
+
+let _projTab = 'overview';
+
+function renderProjectDetail(id) {
+  const p = findProject(id);
+  if (!p) return '<div class="card">Project not found</div>';
+  if (currentUser.type === 'team_leader' && p.team_leader_id !== currentUser.id) return '<div class="card">Access denied</div>';
+  const tl = findTL(p.team_leader_id); const prog = projectProgress(id);
+  const casuals = DB.casuals.filter(c => c.project_id === id);
+  const logs = DB.daily_logs.filter(l => l.project_id === id).sort((a,b) => tsToMillis(b.date) - tsToMillis(a.date));
+  const isTL = currentUser.type === 'team_leader' && p.team_leader_id === currentUser.id;
+  const isAdmin = currentUser.type === 'admin';
+  const tabs = isAdmin ? ['overview','casuals','logs','financials'] : ['overview','casuals','logs'];
+  if (p.sites && p.sites.length) tabs.push('sites');
+  let tabContent = '';
+  if (_projTab === 'overview') tabContent = renderProjOverview(p, prog, tl, isAdmin);
+  else if (_projTab === 'casuals') tabContent = renderProjCasuals(p, casuals, isTL);
+  else if (_projTab === 'logs') tabContent = renderProjLogs(p, logs);
+  else if (_projTab === 'financials' && isAdmin) tabContent = renderProjFinancials(p);
+  else if (_projTab === 'sites') tabContent = renderProjSites(p);
+  return `
+    <div class="section-head"><div style="flex:1;min-width:0"><span class="hash" style="cursor:pointer" onclick="navigate('projects')"><i class="fas fa-arrow-left"></i> Projects</span><h2 style="margin-top:4px">${escapeHtml(p.name)}</h2><div class="sub">SMP <b>${escapeHtml(p.smp||'-')}</b>${p.po_number?' - PO <b>'+escapeHtml(p.po_number)+'</b>':''} - ${escapeHtml(p.site_module_package||'')}</div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><span class="badge badge-${p.status}">${p.status.replace('_',' ')}</span>${isAdmin ? `<button class="btn btn-sm btn-outline" onclick="openProjectModal('${p.id}')"><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-danger" onclick="deleteProject('${p.id}')"><i class="fas fa-trash"></i></button>` : ''}${isTL && p.status === 'active' ? `<button class="btn btn-sm btn-primary" onclick="openCompleteProjectModal('${p.id}')"><i class="fas fa-check"></i> Mark Complete</button>` : ''}${isAdmin && p.status === 'pending_approval' ? `<button class="btn btn-sm btn-success" onclick="approveProject('${p.id}')"><i class="fas fa-check-circle"></i> Approve</button><button class="btn btn-sm btn-danger" onclick="rejectProject('${p.id}')"><i class="fas fa-times"></i> Send Back</button>` : ''}</div></div>
+    ${isAdmin ? `<div class="grid grid-4 mb-4">
+      <div class="card metric-card"><div class="m-label">Budget</div><div class="m-value"><span class="highlight">${fmtKES(projectTotals(id).allocated)}</span></div></div>
+      <div class="card metric-card"><div class="m-label">Spent + Approved Funds</div><div class="m-value">${fmtKES(projectTotals(id).spent + projectTotals(id).approvedFunds)}</div></div>
+      <div class="card metric-card"><div class="m-label">Remaining</div><div class="m-value"><span class="highlight" style="color:${projectTotals(id).remaining>=0?'var(--primary)':'var(--danger)'}">${fmtKES(projectTotals(id).remaining)}</span></div>${projectTotals(id).pendingFunds ? `<div class="m-sub" style="color:var(--accent)">+ ${fmtKES(projectTotals(id).pendingFunds)} pending</div>` : ''}</div>
+      <div class="card metric-card"><div class="m-label">Team Leader</div><div class="m-value" style="font-size:14px">${tl?escapeHtml(tl.full_name||tl.username):'-'}</div><div class="m-sub">${casuals.filter(c=>c.active).length} casuals active</div></div>
+    </div>` : `<div class="grid grid-2 mb-4">
+      <div class="card metric-card"><div class="m-label">Progress</div><div class="m-value"><span class="highlight">${prog.pct}%</span></div><div class="m-sub">Based on logs submitted</div></div>
+      <div class="card metric-card"><div class="m-label">Team</div><div class="m-value" style="font-size:14px">${casuals.filter(c=>c.active).length} casuals active</div><div class="m-sub">${logs.length} logs submitted</div></div>
+    </div>`}
+    <div class="tabs">${tabs.map(k => `<button class="tab ${_projTab===k?'active':''}" onclick="_projTab='${k}';navigate('project-detail','${id}')">${k.charAt(0).toUpperCase()+k.slice(1)}</button>`).join('')}</div>
+    ${tabContent}`;
+}
+
+function renderProjOverview(p, prog, tl, isAdmin) {
+  return `<div class="grid grid-2"><div class="card"><h4 style="font-size:14px;margin-bottom:10px">Project Details</h4><div style="display:grid;grid-template-columns:120px 1fr;gap:8px 12px;font-size:13px"><div style="color:var(--text-soft)">Client</div><div>${escapeHtml(p.client||'-')}</div><div style="color:var(--text-soft)">Location</div><div>${escapeHtml(p.location||'-')}</div><div style="color:var(--text-soft)">Region</div><div>${escapeHtml(p.region||'-')}</div><div style="color:var(--text-soft)">Start</div><div>${p.start?fmtDate(p.start):'-'}</div><div style="color:var(--text-soft)">End</div><div>${p.end?fmtDate(p.end):'-'}</div><div style="color:var(--text-soft)">Team Leader</div><div>${tl?escapeHtml(tl.full_name||tl.username):'-'}</div></div>${p.description ? `<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)"><div style="color:var(--text-soft);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Description</div><div style="font-size:13px">${escapeHtml(p.description)}</div></div>` : ''}</div>${isAdmin ? renderProjFinancialSummary(p) : `<div class="card"><h4 style="font-size:14px;margin-bottom:10px">Progress</h4><div class="progress-bar" style="height:10px"><div class="fill" style="width:${prog.pct}%"></div></div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-soft);margin-top:6px"><span>${prog.pct}% complete</span><span>Based on logs and status</span></div></div>`}</div>`;
+}
+
+function renderProjFinancialSummary(p) {
+  const t = projectTotals(p.id);
+  return `<div class="card"><h4 style="font-size:14px;margin-bottom:10px">Financial Summary</h4><div style="display:grid;grid-template-columns:1fr auto;gap:6px;font-size:13px"><div>Allocated budget</div><div style="font-weight:600">${fmtKES(t.allocated)}</div><div>Direct expenditure</div><div style="font-weight:600;color:var(--danger)">- ${fmtKES(t.spent)}</div><div>Approved additional funds (expenditure)</div><div style="font-weight:600;color:var(--danger)">- ${fmtKES(t.approvedFunds)}</div><div style="border-top:1px solid var(--border);padding-top:6px;margin-top:4px">Remaining</div><div style="border-top:1px solid var(--border);padding-top:6px;margin-top:4px;font-weight:700;color:${t.remaining>=0?'var(--primary)':'var(--danger)'}">${fmtKES(t.remaining)}</div>${t.pendingFunds ? `<div style="color:var(--accent)">Pending requests (not yet deducted)</div><div style="color:var(--accent)">${fmtKES(t.pendingFunds)}</div>` : ''}</div></div>`;
+}
+
+function renderProjCasuals(p, casuals, isTL) {
+  return `<div class="section-head" style="margin-bottom:12px"><div><h4 style="font-size:14px">Casuals on this project (${casuals.filter(c=>c.active).length} active)</h4></div>${isTL ? `<button class="btn btn-sm btn-primary" onclick="openCasualModal(null,'${p.id}')"><i class="fas fa-plus"></i> Add Casual</button>` : ''}</div>${casuals.length ? `<div class="table-wrap"><table><tr><th>Name</th><th>Phone</th><th>Role</th><th>Status</th>${isTL?'<th></th>':''}</tr>${casuals.map(c => `<tr><td><b>${escapeHtml(c.name)}</b></td><td>${escapeHtml(c.phone)}</td><td>${escapeHtml(c.role||'-')}</td><td><span class="badge badge-${c.active?'active':'inactive'}">${c.active?'active':'inactive'}</span></td>${isTL ? `<td><button class="btn btn-xs btn-outline" onclick="openCasualModal('${c.id}','${p.id}')"><i class="fas fa-edit"></i></button><button class="btn btn-xs btn-danger" onclick="deleteCasual('${c.id}')"><i class="fas fa-trash"></i></button></td>` : ''}</tr>`).join('')}</table></div>` : `<div class="card" style="text-align:center;padding:30px;color:var(--text-soft)">No casuals added yet</div>`}`;
+}
+
+function renderProjLogs(p, logs) {
+  return `<div class="section-head" style="margin-bottom:12px"><div><h4 style="font-size:14px">Daily Logs (${logs.length})</h4></div>${(currentUser.type === 'team_leader' && p.team_leader_id === currentUser.id) ? `<button class="btn btn-sm btn-primary" onclick="openDailyLogModal('${p.id}')"><i class="fas fa-plus"></i> Submit Log</button>` : ''}</div>${logs.length ? logs.map(l => { const casuals = (l.casuals_present||[]).map(id => findCasual(id)).filter(Boolean); return `<div class="card" style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap"><div style="flex:1;min-width:200px"><div style="font-weight:600">${fmtDate(l.date)} - ${l.hours_worked||0}h</div><div style="font-size:13px;margin-top:4px">${escapeHtml(l.work_done||'')}</div>${casuals.length ? `<div style="font-size:11px;color:var(--text-soft);margin-top:6px"><i class="fas fa-users"></i> ${casuals.map(c=>escapeHtml(c.name)).join(', ')}</div>` : ''}${l.materials_used ? `<div style="font-size:11px;color:var(--text-soft)"><i class="fas fa-box"></i> ${escapeHtml(l.materials_used)}</div>` : ''}</div><div style="font-size:11px;color:var(--text-soft)">${timeAgo(l.submitted_at)}</div></div></div>`; }).join('') : '<div class="card" style="text-align:center;padding:30px;color:var(--text-soft)">No logs submitted yet</div>'}`;
+}
+
+function renderProjFinancials(p) {
+  const t = projectTotals(p.id);
+  const budget = projectBudget(p.id);
+  const exp = (budget.expenditure||[]).slice().sort((a,b) => b.date - a.date);
+  const funds = (budget.additional_funds||[]).slice().sort((a,b) => b.requested_at - a.requested_at);
+  return `<div class="grid grid-3 mb-4">
+    <div class="card metric-card"><div class="m-label">Allocated</div><div class="m-value"><span class="highlight">${fmtKES(t.allocated)}</span></div></div>
+    <div class="card metric-card"><div class="m-label">Spent + Funds</div><div class="m-value">${fmtKES(t.spent + t.approvedFunds)}</div><div class="m-sub">${exp.length} entries + ${budget.additional_funds.filter(f=>f.status==='approved').length} approved funds</div></div>
+    <div class="card metric-card"><div class="m-label">Remaining</div><div class="m-value"><span class="highlight" style="color:${t.remaining>=0?'var(--primary)':'var(--danger)'}">${fmtKES(t.remaining)}</span></div></div>
+  </div>
+    <div class="card mb-4"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h4 style="font-size:14px">Expenditure</h4><button class="btn btn-xs btn-primary" onclick="openExpenseModal('${p.id}')"><i class="fas fa-plus"></i> Add</button></div>${exp.length ? `<div class="table-wrap"><table><tr><th>Date</th><th>Item</th><th>Receipt</th><th>Amount</th></tr>${exp.map(e => `<tr><td>${fmtDate(e.date)}</td><td>${escapeHtml(e.item)}</td><td>${escapeHtml(e.receipt||'-')}</td><td><b>${fmtKES(e.amount)}</b></td></tr>`).join('')}</table></div>` : '<div style="text-align:center;padding:20px;color:var(--text-soft);font-size:13px">No expenditure recorded</div>'}</div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h4 style="font-size:14px">Additional Funds Requests</h4></div>${funds.length ? funds.map(f => { const tl = findTL(f.requested_by); return `<div style="padding:12px 0;border-bottom:1px solid var(--border)"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><div style="flex:1;min-width:200px"><div style="font-weight:600">${fmtKES(f.amount)} - ${f.status}</div><div style="font-size:12px;color:var(--text-soft);margin-top:2px">${escapeHtml(f.reason)}</div><div style="font-size:11px;color:var(--text-soft);margin-top:4px">Requested by ${tl?escapeHtml(tl.full_name||tl.username):'-'} - ${timeAgo(f.requested_at)}</div></div><div style="display:flex;align-items:center;gap:6px">${f.status === 'pending' ? `<button class="btn btn-xs btn-success" onclick="approveFund('${p.id}','${f.id}')"><i class="fas fa-check"></i> Approve</button><button class="btn btn-xs btn-danger" onclick="rejectFund('${p.id}','${f.id}')"><i class="fas fa-times"></i></button>` : ''}${f.status !== 'pending' ? `<span class="badge badge-${f.status}">${f.status}</span>` : ''}</div></div></div>`; }).join('') : '<div style="text-align:center;padding:20px;color:var(--text-soft);font-size:13px">No fund requests</div>'}</div>`;
+}
+
+function renderProjSites(p) { return `<div class="card"><h4 style="font-size:14px;margin-bottom:10px">Sites (${(p.sites||[]).length})</h4>${(p.sites||[]).length ? `<div class="table-wrap"><table><tr><th>Site ID</th><th>Site Name</th><th>SMP</th><th>PO Number</th></tr>${p.sites.map(s => `<tr><td><b>${escapeHtml(s.site_id)}</b></td><td>${escapeHtml(s.site_name)}</td><td>${escapeHtml(s.smp)}</td><td>${escapeHtml(s.po_number)}</td></tr>`).join('')}</table></div>` : '<div style="text-align:center;padding:20px;color:var(--text-soft)">No sites linked</div>'}</div>`; }
+
+function renderTeamLeaders() {
+  const tls = DB.users.filter(u => u.role === 'team_leader');
+  return `<div class="section-head"><div><span class="hash"># People</span><h2>Team Leaders</h2><div class="sub">${tls.length} team leader${tls.length!==1?'s':''}</div></div><button class="btn btn-primary" onclick="openTLModal()"><i class="fas fa-plus"></i> Add Team Leader</button></div>${tls.length ? `<div class="grid grid-2">${tls.map(tl => { const projects = DB.projects.filter(p => p.team_leader_id === tl.id); const casuals = DB.casuals.filter(c => projects.some(p => p.id === c.project_id) && c.active); return `<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:15px">${escapeHtml(tl.full_name||tl.username)}</div><div style="font-size:12px;color:var(--text-soft);margin-top:2px"><i class="fas fa-phone"></i> ${escapeHtml(tl.phone||'-')}</div><div style="font-size:12px;color:var(--text-soft)"><i class="fas fa-envelope"></i> ${escapeHtml(tl.email||'-')}</div><div style="font-size:12px;color:var(--text-soft)"><i class="fas fa-user"></i> ${escapeHtml(tl.username||'-')}</div></div><button class="btn btn-xs btn-outline" onclick="openTLModal('${tl.id}')"><i class="fas fa-edit"></i></button></div><div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-soft);font-weight:600;margin-bottom:6px">Login Credentials</div><div class="cred-box"><button class="copy" onclick="copyText('${escapeHtml(tl.username)}@newl.africa | Pass: ${escapeHtml(tl.initial_password||'(not stored)')}')">Copy</button><div><b>Email:</b> ${escapeHtml(tl.username)}@newl.africa</div><div><b>Password:</b> ${escapeHtml(tl.initial_password||'(ask admin to reset)')}</div></div><div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="btn btn-xs btn-outline" onclick="resetTLPassword('${tl.id}')"><i class="fas fa-key"></i> Reset Password</button><button class="btn btn-xs btn-outline" onclick="sendTLCredentials('${tl.id}')"><i class="fas fa-sms"></i> Send via SMS</button><button class="btn btn-xs btn-danger" onclick="deleteTL('${tl.id}')"><i class="fas fa-trash"></i></button></div></div><div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--text-soft)"><div><b>${projects.length}</b> project${projects.length!==1?'s':''} - <b>${casuals.length}</b> casuals active</div>${projects.map(p => `<div style="margin-top:4px"><i class="fas fa-folder" style="color:var(--primary)"></i> ${escapeHtml(p.name)} <span style="color:var(--text-light)">- SMP ${escapeHtml(p.smp||'-')}</span></div>`).join('')}</div></div>`; }).join('')}</div>` : `<div class="card empty-state"><i class="fas fa-user-tie"></i><div class="msg">No team leaders yet. Add your first one.</div></div>`}`;
+}
+
+function openTLModal(editId) {
+  const tl = editId ? findTL(editId) : null;
+  const body = `<div class="field"><label>Full Name</label><input id="tlf-name" value="${tl?escapeHtml(tl.full_name||''):''}" placeholder="e.g. Ken Juma"></div><div class="field-row"><div class="field"><label>Phone</label><input id="tlf-phone" value="${tl?escapeHtml(tl.phone||''):''}" placeholder="+254712345678"></div><div class="field"><label>Email (contact)</label><input id="tlf-email" value="${tl?escapeHtml(tl.email||''):''}" placeholder="name@newl.africa"></div></div><div class="field"><label>Username (will be {username}@newl.africa)</label><input id="tlf-username" value="${tl?escapeHtml(tl.username||''):''}" placeholder="tl.kenjuma" ${tl?'readonly':''}></div>${!tl ? `<div style="font-size:12px;color:var(--text-soft);background:var(--bg);border-radius:10px;padding:10px 14px;margin-bottom:12px"><i class="fas fa-key"></i> A password will be auto-generated, saved to Firestore, and sent by SMS with the login link.</div>` : `<div class="field"><label>Password (reset if needed)</label><input id="tlf-password" placeholder="Leave blank to keep current"></div>`}<div class="field"><label>Assign Projects</label><div style="max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:12px;padding:8px">${DB.projects.length ? DB.projects.map(p => { const checked = tl && (tl.project_ids || DB.projects.filter(x=>x.team_leader_id===tl.id).map(x=>x.id)).includes(p.id); return `<label style="display:flex;align-items:center;gap:8px;padding:6px 4px;font-size:13px;text-transform:none;letter-spacing:0;color:var(--text);font-weight:400;cursor:pointer"><input type="checkbox" class="tlf-proj" value="${p.id}" ${checked?'checked':''} style="width:auto;margin:0"><span>${escapeHtml(p.name)} <span style="color:var(--text-soft)">- SMP ${escapeHtml(p.smp||'-')}</span></span></label>`; }).join('') : '<div style="padding:8px;color:var(--text-soft);font-size:12px">No projects yet. Create one first.</div>'}</div></div>`;
+  openModal(editId?'Edit Team Leader':'New Team Leader', body, [{ label:'Cancel', cls:'btn btn-outline', onclick:'closeModal()' }, { label: editId?'Save':'Create', cls:'btn btn-primary', onclick:`saveTL(${editId?`'${editId}'`:'null'})` }]);
+}
+
+async function saveTL(id) {
+  const full_name = document.getElementById('tlf-name').value.trim();
+  const phone = document.getElementById('tlf-phone').value.trim();
+  const email = document.getElementById('tlf-email').value.trim();
+  const username = document.getElementById('tlf-username').value.trim();
+  const project_ids = Array.from(document.querySelectorAll('.tlf-proj:checked')).map(c => c.value);
+  if (!full_name || !username) { toast('Name and username required', 'error'); return; }
+  const duplicate = DB.users.find(t => t.username === username && t.id !== id && t.role === 'team_leader');
+  if (duplicate) { toast('Username already in use', 'error'); return; }
+  showLoading('Saving team leader...');
+  try {
+    if (id) {
+      const tl = findTL(id);
+      const oldIds = (DB.projects.filter(x=>x.team_leader_id===tl.id).map(x=>x.id));
+      const patch = { full_name, phone, email, username, project_ids };
+      await fsUpdate('users', id, patch);
+      Object.assign(tl, patch);
+      for (const pid of project_ids) { if (!oldIds.includes(pid)) { await fsUpdate('projects', pid, { team_leader_id: id }); const p = findProject(pid); if (p) p.team_leader_id = id; } }
+      for (const pid of oldIds) { if (!project_ids.includes(pid)) { await fsUpdate('projects', pid, { team_leader_id: null }); const p = findProject(pid); if (p) p.team_leader_id = null; } }
+      auditLog('Updated Team Leader', full_name);
+      toast('Team leader updated');
+      const addedProjects = project_ids.filter(pid => !oldIds.includes(pid));
+      if (phone) { for (const pid of addedProjects) { const proj = findProject(pid); if (proj) await SMSService.send(phone, SMS.tlProjectAssigned(full_name, proj.name, proj.smp, proj.po_number), 'tlProjectAssigned'); } }
+    } else {
+      const emailLogin = username + '@newl.africa';
+      const password = genPassword();
+      const cred = await window.fbAuth.createUserWithEmailAndPassword(window.firebaseAuth, emailLogin, password);
+      const newUid = cred.user.uid;
+      await fsSet('users', newUid, { full_name, username, email, phone, role: 'team_leader', project_ids, created_by: currentUser.id, initial_password: password });
+      for (const pid of project_ids) { await fsUpdate('projects', pid, { team_leader_id: newUid }); const p = findProject(pid); if (p) p.team_leader_id = newUid; }
+      DB.users.push({ id: newUid, full_name, username, email, phone, role: 'team_leader', project_ids, initial_password: password });
+      auditLog('Created Team Leader', `${full_name} (${username})`);
+      const credMessage = `Username: ${username}\nLogin email: ${emailLogin}\nPassword: ${password}`;
+      try { navigator.clipboard.writeText(credMessage); toast('Credentials copied to clipboard'); } catch(e) {}
+      const adminEmailForReauth = (currentUser.email && currentUser.email.includes('@')) ? currentUser.email : (currentUser.username || 'admin') + '@newl.africa';
+      await window.fbAuth.signOut(window.firebaseAuth);
+      const pwd = prompt(`Team Leader created.\n\nUsername: ${username}\nPassword: ${password}\n\n(Also copied to clipboard)\n\nRe-enter YOUR admin password to continue:`, '');
+      if (!pwd) { toast('Session ended. Please log back in.', 'info'); setTimeout(() => { logout(); }, 800); hideLoading(); return; }
+      try { await window.fbAuth.signInWithEmailAndPassword(window.firebaseAuth, adminEmailForReauth, pwd); }
+      catch(e) { console.error('Re-auth failed', e); toast('Wrong password. Please log back in.', 'error'); setTimeout(() => { logout(); }, 1200); hideLoading(); return; }
+      if (phone) {
+        await SMSService.send(phone, SMS.tlWelcome(full_name, username, password), 'tlWelcome');
+        for (const pid of project_ids) { const proj = findProject(pid); if (proj) await SMSService.send(phone, SMS.tlProjectAssigned(full_name, proj.name, proj.smp, proj.po_number), 'tlProjectAssigned'); }
+      }
+    }
+    hideLoading(); closeModal(); navigate('team-leaders');
+  } catch(e) { hideLoading(); console.error(e); let msg = e.message || 'Failed'; if (msg.includes('auth/email-already-in-use')) msg = 'Username already registered. Try a different one, or delete the orphaned Auth user in Firebase Console.'; toast(msg, 'error'); }
+}
+
+async function resetTLPassword(id) {
+  const tl = findTL(id); if (!tl) return;
+  const newPwd = prompt(`Enter new password for ${tl.full_name || tl.username}:`, genPassword());
+  if (!newPwd) return;
+  try { await fsUpdate('users', id, { initial_password: newPwd }); tl.initial_password = newPwd; toast(`Password updated. Click "Send via SMS" to notify.`); navigate('team-leaders'); }
+  catch(e) { toast('Failed: '+e.message, 'error'); }
+}
+
+async function sendTLCredentials(id) {
+  const tl = findTL(id); if (!tl) return;
+  if (!tl.phone) { toast('No phone on record for this TL', 'error'); return; }
+  const pwd = tl.initial_password || '(ask admin to reset your password)';
+  await SMSService.send(tl.phone, SMS.tlWelcome(tl.full_name || tl.username, tl.username, pwd), 'tlWelcome');
+  toast(`Credentials SMS sent to ${escapeHtml(tl.phone)}`);
+}
+function copyText(text) { if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => toast('Copied')); else prompt('Copy:', text); }
+
+async function deleteTL(id) {
+  const tl = findTL(id); if (!tl) return;
+  if (!confirm(`Delete ${tl.full_name||tl.username}? Their projects will become unassigned.`)) return;
+  showLoading('Deleting...');
+  try {
+    const projects = DB.projects.filter(p => p.team_leader_id === id);
+    for (const p of projects) await fsUpdate('projects', p.id, { team_leader_id: null });
+    await fsDelete('users', id);
+    DB.users = DB.users.filter(u => u.id !== id);
+    DB.projects.forEach(p => { if (p.team_leader_id === id) p.team_leader_id = null; });
+    auditLog('Deleted Team Leader', tl.full_name || tl.username);
+    toast('Team leader removed (Auth account remains — delete via console)');
+    hideLoading(); navigate('team-leaders');
+  } catch(e) { hideLoading(); console.error(e); toast('Failed: '+e.message, 'error'); }
+}
+
+let _casualSearch = '';
+function renderCasuals() {
+  let list = DB.casuals.slice();
+  if (currentUser.type === 'team_leader') { const myProjects = DB.projects.filter(p => p.team_leader_id === currentUser.id).map(p => p.id); list = list.filter(c => myProjects.includes(c.project_id)); }
+  if (_casualSearch.trim()) { const q = _casualSearch.toLowerCase(); list = list.filter(c => (c.name||'').toLowerCase().includes(q) || (c.phone||'').toLowerCase().includes(q) || (c.role||'').toLowerCase().includes(q)); }
+  return `<div class="section-head"><div><span class="hash"># People</span><h2>${currentUser.type === 'team_leader' ? 'My Casuals' : 'All Casuals'}</h2><div class="sub">${list.length} casual${list.length!==1?'s':''} shown</div></div>${currentUser.type === 'team_leader' ? `<button class="btn btn-primary" onclick="openCasualModal()"><i class="fas fa-plus"></i> Add Casual</button>` : ''}</div>
+    <div class="card" style="padding:12px 16px;margin-bottom:14px"><input placeholder="Search by name, phone or role..." value="${escapeHtml(_casualSearch)}" oninput="_casualSearch=this.value;navigate('casuals')"></div>
+    ${list.length ? `<div class="table-wrap"><table><tr><th>Name</th><th>Phone</th><th>Role</th><th>Project</th><th>Status</th><th></th></tr>${list.map(c => { const p = findProject(c.project_id); return `<tr><td><b>${escapeHtml(c.name)}</b></td><td><a href="tel:${escapeHtml(c.phone)}" style="color:var(--primary);text-decoration:none">${escapeHtml(c.phone)}</a></td><td>${escapeHtml(c.role||'-')}</td><td>${p?escapeHtml(p.name):'-'}</td><td><span class="badge badge-${c.active?'active':'inactive'}">${c.active?'active':'inactive'}</span></td><td>${currentUser.type === 'team_leader' && c.added_by === currentUser.id ? `<button class="btn btn-xs btn-outline" onclick="openCasualModal('${c.id}')"><i class="fas fa-edit"></i></button><button class="btn btn-xs btn-danger" onclick="deleteCasual('${c.id}')"><i class="fas fa-trash"></i></button>` : ''}</td></tr>`; }).join('')}</table></div>` : `<div class="card empty-state"><i class="fas fa-users"></i><div class="msg">No casuals yet</div></div>`}`;
+}
+
+function openCasualModal(editId, presetProjectId) {
+  const c = editId ? findCasual(editId) : null;
+  const myProjects = currentUser.type === 'team_leader' ? DB.projects.filter(p => p.team_leader_id === currentUser.id) : DB.projects;
+  const body = `<div class="field"><label>Name</label><input id="cf-name" value="${c?escapeHtml(c.name||''):''}" placeholder="e.g. John Otieno"></div><div class="field"><label>Phone</label><input id="cf-phone" value="${c?escapeHtml(c.phone||''):''}" placeholder="+254712345678"></div><div class="field-row"><div class="field"><label>Role</label><input id="cf-role" value="${c?escapeHtml(c.role||''):''}" placeholder="Rigger, Electrician..."></div><div class="field"><label>Daily Rate (KES) - optional</label><input id="cf-rate" type="number" value="${c?c.daily_rate||'':''}" placeholder="Optional"></div></div><div class="field"><label>Project</label><select id="cf-project">${myProjects.length ? myProjects.map(p => `<option value="${p.id}" ${(c&&c.project_id===p.id)||presetProjectId===p.id?'selected':''}>${escapeHtml(p.name)} - SMP ${escapeHtml(p.smp||'-')}</option>`).join('') : '<option value="">No projects available</option>'}</select></div>`;
+  openModal(editId?'Edit Casual':'Add Casual', body, [{ label:'Cancel', cls:'btn btn-outline', onclick:'closeModal()' }, { label: editId?'Save':'Add', cls:'btn btn-primary', onclick:`saveCasual(${editId?`'${editId}'`:'null'})` }]);
+}
+
+async function saveCasual(id) {
+  const name = document.getElementById('cf-name').value.trim();
+  const phone = document.getElementById('cf-phone').value.trim();
+  const role = document.getElementById('cf-role').value.trim();
+  const daily_rate = parseFloat(document.getElementById('cf-rate').value) || 0;
+  const project_id = document.getElementById('cf-project').value;
+  if (!name || !phone) { toast('Name and phone required', 'error'); return; }
+  if (!project_id) { toast('Please select a project (or ask admin to assign you one)', 'error'); return; }
+  const project = findProject(project_id);
+  const adminUser = DB.users.find(u => u.role === 'admin');
+  showLoading('Saving casual...');
+  try {
+    if (id) {
+      const c = findCasual(id);
+      await fsUpdate('casuals', id, { name, phone, role, daily_rate, project_id });
+      Object.assign(c, { name, phone, role, daily_rate, project_id });
+      auditLog('Updated Casual', name);
+      toast('Casual updated');
+    } else {
+      const newId = await fsAdd('casuals', { name, phone, role, daily_rate, project_id, added_by: currentUser.id, added_at: Date.now(), active: true });
+      DB.casuals.push({ id: newId, name, phone, role, daily_rate, project_id, added_by: currentUser.id, added_at: Date.now(), active: true });
+      auditLog('Added Casual', `${name} to ${project?.name||''}`);
+      toast('Casual added');
+      if (phone) await SMSService.send(phone, SMS.casualAdded(name, project?.name||'', currentUser.full_name||currentUser.username), 'casualAddedToCasual');
+      if (adminUser?.phone) await SMSService.send(adminUser.phone, SMS.casualAddedAdmin(currentUser.full_name||currentUser.username, name, phone, project?.name||''), 'casualAddedToAdmin');
+    }
+    hideLoading(); closeModal();
+    navigate(currentView === 'casuals' ? 'casuals' : 'project-detail', currentView === 'project-detail' ? project_id : null);
+  } catch(e) { hideLoading(); console.error(e); toast('Failed: '+e.message, 'error'); }
+}
+
+async function deleteCasual(id) {
+  const c = findCasual(id); if (!c) return;
+  if (!confirm(`Remove ${c.name}?`)) return;
+  const pid = c.project_id; const project = findProject(pid); const adminUser = DB.users.find(u => u.role === 'admin');
+  showLoading('Removing...');
+  try {
+    if (c.phone) await SMSService.send(c.phone, SMS.casualRemoved(c.name, project?.name||'', currentUser.full_name||currentUser.username), 'casualRemovedFromCasual');
+    if (adminUser?.phone) await SMSService.send(adminUser.phone, SMS.casualRemovedAdmin(currentUser.full_name||currentUser.username, c.name, project?.name||''), 'casualRemovedFromAdmin');
+    await fsDelete('casuals', id);
+    DB.casuals = DB.casuals.filter(x => x.id !== id);
+    auditLog('Removed Casual', c.name);
+    toast('Casual removed');
+    hideLoading();
+    navigate(currentView === 'project-detail' ? 'project-detail' : 'casuals', currentView === 'project-detail' ? pid : null);
+  } catch(e) { hideLoading(); console.error(e); toast('Failed: '+e.message, 'error'); }
+}
+
+function renderLogs() {
+  let logs = DB.daily_logs.slice().sort((a,b) => tsToMillis(b.date) - tsToMillis(a.date));
+  if (currentUser.type === 'team_leader') logs = logs.filter(l => l.submitted_by === currentUser.id);
+  return `<div class="section-head"><div><span class="hash"># Field Reports</span><h2>Daily Logs</h2><div class="sub">${logs.length} log${logs.length!==1?'s':''}</div></div>${currentUser.type === 'team_leader' ? `<button class="btn btn-primary" onclick="openDailyLogModal()"><i class="fas fa-plus"></i> Submit Log</button>` : ''}</div>${logs.length ? logs.map(l => { const p = findProject(l.project_id); const tl = findTL(l.submitted_by); const casuals = (l.casuals_present||[]).map(id => findCasual(id)).filter(Boolean); return `<div class="card mb-3"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap"><div style="flex:1;min-width:200px"><div style="font-weight:700">${fmtDate(l.date)}</div><div style="font-size:12px;color:var(--text-soft);margin-top:2px">${p?escapeHtml(p.name):'-'} - SMP ${p?escapeHtml(p.smp||'-'):'-'}</div><div style="font-size:13px;margin-top:8px">${escapeHtml(l.work_done||'')}</div><div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:var(--text-soft)"><span><i class="fas fa-clock"></i> ${l.hours_worked||0}h</span>${casuals.length ? `<span><i class="fas fa-users"></i> ${casuals.map(c=>escapeHtml(c.name)).join(', ')}</span>` : ''}${l.materials_used ? `<span><i class="fas fa-box"></i> ${escapeHtml(l.materials_used)}</span>` : ''}</div></div><div style="text-align:right;font-size:11px;color:var(--text-soft)"><div>by ${tl?escapeHtml(tl.full_name||tl.username):'-'}</div><div>${timeAgo(l.submitted_at)}</div></div></div></div>`; }).join('') : '<div class="card empty-state"><i class="fas fa-clipboard-list"></i><div class="msg">No daily logs yet</div></div>'}`;
+}
+
+function openDailyLogModal(presetProjectId) {
+  const myProjects = currentUser.type === 'team_leader' ? DB.projects.filter(p => p.team_leader_id === currentUser.id) : DB.projects;
+  if (!myProjects.length) { toast('No projects available', 'error'); return; }
+  const activeProjectId = presetProjectId || myProjects[0].id;
+  const casualsInProject = DB.casuals.filter(c => c.project_id === activeProjectId && c.active);
+  const body = `<div class="field"><label>Project</label><select id="dlf-project" onchange="updateDailyLogCasuals(this.value)">${myProjects.map(p => `<option value="${p.id}" ${p.id===activeProjectId?'selected':''}>${escapeHtml(p.name)} - SMP ${escapeHtml(p.smp||'-')}</option>`).join('')}</select></div><div class="field-row"><div class="field"><label>Date</label><input id="dlf-date" type="date" value="${fmtDateInput(Date.now())}"></div><div class="field"><label>Hours Worked</label><input id="dlf-hours" type="number" step="0.5" value="8"></div></div><div class="field"><label>Work Done</label><textarea id="dlf-work" placeholder="Describe what was accomplished today..."></textarea></div><div class="field"><label>Materials Used</label><input id="dlf-materials" placeholder="e.g. Mast sections x3, cable 20m"></div><div class="field"><label>Casuals Present</label><div id="dlf-casuals" style="max-height:160px;overflow-y:auto;border:1px solid var(--border);border-radius:12px;padding:8px">${casualsInProject.length ? casualsInProject.map(c => `<label style="display:flex;align-items:center;gap:8px;padding:6px 4px;font-size:13px;text-transform:none;letter-spacing:0;color:var(--text);font-weight:400;cursor:pointer"><input type="checkbox" class="dlf-casual" value="${c.id}" style="width:auto;margin:0"><span>${escapeHtml(c.name)} <span style="color:var(--text-soft)">- ${escapeHtml(c.role||'-')}</span></span></label>`).join('') : '<div style="padding:8px;color:var(--text-soft);font-size:12px">No casuals added to this project yet</div>'}</div></div>`;
+  openModal('Submit Daily Log', body, [{ label:'Cancel', cls:'btn btn-outline', onclick:'closeModal()' }, { label:'Submit', cls:'btn btn-primary', onclick:'saveDailyLog()' }], true);
+}
+
+function updateDailyLogCasuals(projectId) { const casuals = DB.casuals.filter(c => c.project_id === projectId && c.active); document.getElementById('dlf-casuals').innerHTML = casuals.length ? casuals.map(c => `<label style="display:flex;align-items:center;gap:8px;padding:6px 4px;font-size:13px;text-transform:none;letter-spacing:0;color:var(--text);font-weight:400;cursor:pointer"><input type="checkbox" class="dlf-casual" value="${c.id}" style="width:auto;margin:0"><span>${escapeHtml(c.name)} <span style="color:var(--text-soft)">- ${escapeHtml(c.role||'-')}</span></span></label>`).join('') : '<div style="padding:8px;color:var(--text-soft);font-size:12px">No casuals added to this project yet</div>'; }
+
+async function saveDailyLog() {
+  const project_id = document.getElementById('dlf-project').value;
+  const dateStr = document.getElementById('dlf-date').value;
+  const hours_worked = parseFloat(document.getElementById('dlf-hours').value);
+  const work_done = document.getElementById('dlf-work').value.trim();
+  const materials_used = document.getElementById('dlf-materials').value.trim();
+  const casuals_present = Array.from(document.querySelectorAll('.dlf-casual:checked')).map(c => c.value);
+  if (!project_id || !dateStr || !work_done) { toast('Project, date and work done are required', 'error'); return; }
+  const date = fromDateInput(dateStr);
+  const project = findProject(project_id);
+  showLoading('Submitting log...');
+  try {
+    const newId = await fsAdd('daily_logs', { project_id, date, work_done, sites_touched: (project.sites||[]).map(s=>s.id), casuals_present, hours_worked: hours_worked || 0, materials_used, submitted_by: currentUser.id, submitted_at: Date.now(), status: 'submitted' });
+    DB.daily_logs.push({ id:newId, project_id, date, work_done, casuals_present, hours_worked: hours_worked||0, materials_used, submitted_by: currentUser.id, submitted_at: Date.now(), status:'submitted' });
+    auditLog('Submitted Daily Log', `${project.name} on ${fmtDate(date)}`);
+    const adminUser = DB.users.find(u => u.role === 'admin');
+    if (adminUser) {
+      const notifId = await fsAdd('notifications', { recipient_id: adminUser.id, type:'log_submitted', title:'Daily Log Submitted', message:`${currentUser.full_name||currentUser.username} submitted a log for ${project.name}`, link: { view:'project-detail', param: project_id }, read:false, created_at: Date.now() });
+      DB.notifications.unshift({ id:notifId, recipient_id: adminUser.id, type:'log_submitted', title:'Daily Log Submitted', message:`${currentUser.full_name||currentUser.username} submitted a log for ${project.name}`, link:{view:'project-detail',param:project_id}, read:false, created_at: Date.now() });
+      if (adminUser.phone) await SMSService.send(adminUser.phone, SMS.logSubmitted(currentUser.full_name||currentUser.username, project.name, fmtDate(date), hours_worked||0, work_done.slice(0,60)), 'logSubmitted');
+    }
+    hideLoading(); closeModal(); toast('Daily log submitted'); navigate('logs');
+  } catch(e) { hideLoading(); console.error(e); toast('Failed: '+e.message, 'error'); }
+}
+
+function renderFinancials() {
+  if (currentUser.type !== 'admin') return renderFunds();
+  const totalBudget = DB.projects.reduce((s,p) => s + (p.budget||0), 0);
+  const totalSpent = DB.budgets.reduce((s,b) => s + (b.expenditure||[]).reduce((x,e)=>x+(e.amount||0),0), 0);
+  const totalApprovedFunds = DB.budgets.reduce((s,b) => s + (b.additional_funds||[]).filter(f=>f.status==='approved').reduce((x,f)=>x+(f.approved_amount||0),0), 0);
+  const totalPendingFunds = DB.budgets.reduce((s,b) => s + (b.additional_funds||[]).filter(f=>f.status==='pending').reduce((x,f)=>x+(f.amount||0),0), 0);
+  const overallRemaining = totalBudget - totalSpent - totalApprovedFunds;
+  const pendingFundsList = [];
+  DB.budgets.forEach(b => (b.additional_funds||[]).filter(f => f.status === 'pending').forEach(f => { pendingFundsList.push({ ...f, project: findProject(b.project_id), tl: findTL(f.requested_by) }); }));
+  if (!DB.projects.length) return `<div class="section-head"><div><span class="hash"># Finance</span><h2>Financials</h2></div></div><div class="card empty-state"><i class="fas fa-wallet"></i><div class="msg">Create a project first to see financials</div></div>`;
+  return `<div class="section-head"><div><span class="hash"># Finance</span><h2>Financials</h2><div class="sub">Budget, expenditure and additional funds across all projects</div></div></div>
+    <div class="grid grid-4 mb-4">
+      <div class="card metric-card"><div class="m-label">Total Budget</div><div class="m-value"><span class="highlight">${fmtKES(totalBudget)}</span></div><div class="m-sub">${DB.projects.length} project${DB.projects.length!==1?'s':''}</div></div>
+      <div class="card metric-card"><div class="m-label">Total Outflow</div><div class="m-value" style="color:var(--danger)">${fmtKES(totalSpent + totalApprovedFunds)}</div><div class="m-sub">expenditure + approved funds</div></div>
+      <div class="card metric-card"><div class="m-label">Remaining</div><div class="m-value" style="color:${overallRemaining>=0?'var(--primary)':'var(--danger)'}">${fmtKES(overallRemaining)}</div><div class="m-sub">after all outflow</div></div>
+      <div class="card metric-card"><div class="m-label">Pending Requests</div><div class="m-value" style="color:var(--accent)">${fmtKES(totalPendingFunds)}</div><div class="m-sub">${pendingFundsList.length} request${pendingFundsList.length!==1?'s':''} (not yet deducted)</div></div>
+    </div>
+    ${pendingFundsList.length ? `<div class="card mb-4" style="border-left:3px solid var(--accent)"><h4 style="font-size:14px;margin-bottom:10px"><i class="fas fa-coins" style="color:var(--accent)"></i> Pending Fund Requests</h4>${pendingFundsList.map(f => `<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><div style="flex:1;min-width:220px"><div style="font-weight:600">${fmtKES(f.amount)} - ${escapeHtml(f.project?.name||'-')}</div><div style="font-size:12px;color:var(--text-soft);margin-top:2px">${escapeHtml(f.reason||'')}</div><div style="font-size:11px;color:var(--text-soft);margin-top:4px">SMP ${f.project?.smp||'-'} - Requested by ${f.tl?escapeHtml(f.tl.full_name||f.tl.username):'-'} - ${timeAgo(f.requested_at)}</div></div><div style="display:flex;gap:6px;align-items:center"><button class="btn btn-xs btn-success" onclick="approveFund('${f.project.id}','${f.id}')"><i class="fas fa-check"></i> Approve</button><button class="btn btn-xs btn-danger" onclick="rejectFund('${f.project.id}','${f.id}')"><i class="fas fa-times"></i> Decline</button></div></div></div>`).join('')}</div>` : ''}
+    <div class="grid grid-2 mb-4"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h4 style="font-size:14px"><i class="fas fa-chart-line" style="color:var(--primary)"></i> Monthly Spend Trend</h4></div><div class="chart-box"><canvas id="chartMonthlyTrend"></canvas></div></div><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h4 style="font-size:14px"><i class="fas fa-chart-pie" style="color:var(--secondary)"></i> Expense Categories</h4></div><div class="chart-box"><canvas id="chartCategory"></canvas></div></div></div>
+    <div class="grid grid-2 mb-4"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h4 style="font-size:14px"><i class="fas fa-chart-bar" style="color:var(--accent)"></i> Budget vs Outflow per Project</h4></div><div class="chart-box tall"><canvas id="chartProjectBudget"></canvas></div></div><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h4 style="font-size:14px"><i class="fas fa-chart-area" style="color:var(--primary)"></i> Cumulative Spend</h4></div><div class="chart-box tall"><canvas id="chartCumulative"></canvas></div></div></div>
+    <div class="grid grid-2 mb-4"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h4 style="font-size:14px"><i class="fas fa-trophy" style="color:var(--accent)"></i> Top Spending Projects</h4></div><div class="chart-box"><canvas id="chartTopSpend"></canvas></div></div><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h4 style="font-size:14px"><i class="fas fa-hand-holding-usd" style="color:var(--secondary)"></i> Fund Request Status</h4></div><div class="chart-box"><canvas id="chartFundStatus"></canvas></div></div></div>
+    <div class="card"><h4 style="font-size:14px;margin-bottom:12px">Per-Project Breakdown</h4><div class="table-wrap"><table><tr><th>Project</th><th>SMP</th><th>PO</th><th>Budget</th><th>Spent</th><th>Approved Funds</th><th>Remaining</th><th>Used %</th></tr>${DB.projects.map(p => { const t = projectTotals(p.id); const used = t.spent + t.approvedFunds; const pct = t.allocated ? Math.round((used/t.allocated)*100) : 0; return `<tr class="clickable-row" onclick="navigate('project-detail','${p.id}')"><td><b>${escapeHtml(p.name)}</b></td><td>${escapeHtml(p.smp||'-')}</td><td>${escapeHtml(p.po_number||'-')}</td><td>${fmtKES(t.allocated)}</td><td>${fmtKES(t.spent)}</td><td><span style="color:var(--danger)">- ${fmtKES(t.approvedFunds)}</span>${t.pendingFunds?`<br><span style="color:var(--accent);font-size:11px">${fmtKES(t.pendingFunds)} pending</span>`:''}</td><td style="font-weight:600;color:${t.remaining>=0?'var(--primary)':'var(--danger)'}">${fmtKES(t.remaining)}</td><td><span style="font-weight:600;color:${pct>100?'var(--danger)':pct>80?'var(--accent)':'var(--primary)'}">${pct}%</span></td></tr>`; }).join('')}</table></div></div>`;
+}
+
+function renderFinancialCharts() {
+  if (typeof Chart === 'undefined') { setTimeout(renderFinancialCharts, 300); return; }
+  if (!document.getElementById('chartMonthlyTrend')) return;
+  destroyCharts();
+  const palette = ['#1e6b3a','#1a6dff','#e67e22','#8a5fd6','#d63a6a','#2a8a4a','#c0392b','#16a085'];
+  const gridColor = 'rgba(26,42,36,0.06)';
+  Chart.defaults.font.family = "'Inter', sans-serif"; Chart.defaults.color = '#4d5f57'; Chart.defaults.font.size = 11;
+  try {
+    const now = new Date(); const months = [];
+    for (let i = 5; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); months.push({ key: d.getFullYear()+'-'+d.getMonth(), label: d.toLocaleDateString('en-GB',{month:'short',year:'2-digit'}) }); }
+    const monthlyTotals = months.map(m => DB.budgets.reduce((sum,b) => sum + (b.expenditure||[]).filter(e => { const d = new Date(tsToMillis(e.date)); return (d.getFullYear()+'-'+d.getMonth()) === m.key; }).reduce((s,e)=>s+(e.amount||0),0), 0));
+    const el = document.getElementById('chartMonthlyTrend');
+    if (el) _charts.trend = new Chart(el, { type:'line', data:{ labels:months.map(m=>m.label), datasets:[{ label:'Spend', data:monthlyTotals, borderColor:'#1e6b3a', backgroundColor:'rgba(30,107,58,0.10)', fill:true, tension:0.35, pointBackgroundColor:'#1e6b3a', pointRadius:4 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>'KES '+ctx.parsed.y.toLocaleString('en-KE')}}}, scales:{x:{grid:{display:false}}, y:{grid:{color:gridColor}, ticks:{callback:v=>v>=1000?(v/1000)+'k':v}}} } });
+    const byCat = {}; DB.budgets.forEach(b => (b.expenditure||[]).forEach(e => { const c = (e.item||'Other').split(' ')[0]; byCat[c] = (byCat[c]||0) + (e.amount||0); }));
+    const catLabels = Object.keys(byCat); const elCat = document.getElementById('chartCategory');
+    if (elCat && catLabels.length) _charts.category = new Chart(elCat, { type:'doughnut', data:{ labels:catLabels, datasets:[{ data:catLabels.map(c=>byCat[c]), backgroundColor:catLabels.map((_,i)=>palette[i%palette.length]), borderWidth:2, borderColor:'#fff' }] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'62%', plugins:{legend:{position:'bottom', labels:{boxWidth:10, padding:10, font:{size:11}}}, tooltip:{callbacks:{label:ctx=>ctx.label+': KES '+ctx.parsed.toLocaleString('en-KE')}}} } });
+    const elProj = document.getElementById('chartProjectBudget');
+    if (elProj) { const rows = DB.projects.map(p => { const t = projectTotals(p.id); return { name: p.name.length>18?p.name.slice(0,16)+'...':p.name, outflow: t.spent + t.approvedFunds, remaining:Math.max(0,t.remaining) }; }); if (rows.length) _charts.proj = new Chart(elProj, { type:'bar', data:{ labels:rows.map(r=>r.name), datasets:[{label:'Outflow',data:rows.map(r=>r.outflow),backgroundColor:'#e67e22',borderRadius:6,maxBarThickness:32},{label:'Remaining',data:rows.map(r=>r.remaining),backgroundColor:'#1e6b3a',borderRadius:6,maxBarThickness:32}] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12}}, tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': KES '+ctx.parsed.y.toLocaleString('en-KE')}}}, scales:{x:{stacked:true,grid:{display:false},ticks:{autoSkip:false,maxRotation:30,font:{size:10}}}, y:{stacked:true,grid:{color:gridColor},ticks:{callback:v=>v>=1000?(v/1000)+'k':v}}} } }); }
+    const elCum = document.getElementById('chartCumulative');
+    if (elCum) { const all = []; DB.budgets.forEach(b => (b.expenditure||[]).forEach(e => all.push(e))); all.sort((a,b)=>tsToMillis(a.date)-tsToMillis(b.date)); if (all.length) { let r=0; const pts = all.map(e => { r += (e.amount||0); return { x: fmtDate(e.date), y: r }; }); _charts.cum = new Chart(elCum, { type:'line', data:{ labels:pts.map(p=>p.x), datasets:[{ label:'Cumulative', data:pts.map(p=>p.y), borderColor:'#1a6dff', backgroundColor:'rgba(26,109,255,0.10)', fill:true, tension:0.25, pointBackgroundColor:'#1a6dff', pointRadius:3 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>'KES '+ctx.parsed.y.toLocaleString('en-KE')}}}, scales:{x:{grid:{display:false},ticks:{maxRotation:45,font:{size:10}}}, y:{grid:{color:gridColor},ticks:{callback:v=>v>=1000?(v/1000)+'k':v}}} } }); } }
+    const elTop = document.getElementById('chartTopSpend');
+    if (elTop) { const rows = DB.projects.map(p => { const t = projectTotals(p.id); return { name: p.name, outflow: t.spent + t.approvedFunds }; }).sort((a,b)=>b.outflow-a.outflow).slice(0,6); if (rows.length && !rows.every(r=>r.outflow===0)) _charts.top = new Chart(elTop, { type:'bar', data:{ labels:rows.map(r=>r.name.length>20?r.name.slice(0,18)+'...':r.name), datasets:[{label:'Outflow',data:rows.map(r=>r.outflow),backgroundColor:rows.map((_,i)=>palette[i%palette.length]),borderRadius:6,maxBarThickness:22}] }, options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>'KES '+ctx.parsed.x.toLocaleString('en-KE')}}}, scales:{x:{grid:{color:gridColor},ticks:{callback:v=>v>=1000?(v/1000)+'k':v}}, y:{grid:{display:false},ticks:{font:{size:11}}}} } }); }
+    const elFund = document.getElementById('chartFundStatus');
+    if (elFund) { const counts={pending:0,approved:0,rejected:0}; const amts={pending:0,approved:0,rejected:0}; DB.budgets.forEach(b => (b.additional_funds||[]).forEach(f => { counts[f.status]=(counts[f.status]||0)+1; const a = f.status==='approved'?(f.approved_amount||f.amount):f.amount; amts[f.status]=(amts[f.status]||0)+a; })); const total = counts.pending+counts.approved+counts.rejected; if (total) _charts.fund = new Chart(elFund, { type:'doughnut', data:{ labels:['Pending','Approved','Rejected'], datasets:[{ data:[amts.pending,amts.approved,amts.rejected], backgroundColor:['#e67e22','#1e6b3a','#dc3545'], borderWidth:2, borderColor:'#fff' }] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'62%', plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:10,font:{size:11}}}, tooltip:{callbacks:{label:ctx=>{const k=['pending','approved','rejected'][ctx.dataIndex]; return ctx.label+': KES '+ctx.parsed.toLocaleString('en-KE')+' ('+counts[k]+')';}}}} } }); }
+  } catch(e) { console.error('Chart error:', e); }
+}
+
+function renderFunds() {
+  const myProjects = DB.projects.filter(p => p.team_leader_id === currentUser.id).map(p => p.id);
+  const myFunds = [];
+  DB.budgets.forEach(b => { if (!myProjects.includes(b.project_id)) return; (b.additional_funds||[]).forEach(f => myFunds.push({ ...f, project: findProject(b.project_id) })); });
+  myFunds.sort((a,b)=>tsToMillis(b.requested_at)-tsToMillis(a.requested_at));
+  return `<div class="section-head"><div><span class="hash"># Finance</span><h2>My Fund Requests</h2><div class="sub">${myFunds.length} request${myFunds.length!==1?'s':''}</div></div><button class="btn btn-primary" onclick="openFundRequestPickerModal()"><i class="fas fa-plus"></i> Request Funds</button></div>${myFunds.length ? `<div class="table-wrap"><table><tr><th>Project</th><th>SMP</th><th>Amount</th><th>Reason</th><th>Status</th><th>Date</th></tr>${myFunds.map(f => `<tr><td><b>${escapeHtml(f.project?.name||'-')}</b></td><td>${escapeHtml(f.project?.smp||'-')}</td><td>${fmtKES(f.amount)}</td><td style="font-size:12px">${escapeHtml(f.reason||'')}</td><td><span class="badge badge-${f.status}">${f.status}</span></td><td style="font-size:11px">${timeAgo(f.requested_at)}</td></tr>`).join('')}</table></div>` : `<div class="card empty-state"><i class="fas fa-coins"></i><div class="msg">No fund requests yet</div></div>`}`;
+}
+
+function openFundRequestPickerModal() {
+  const myProjects = DB.projects.filter(p => p.team_leader_id === currentUser.id);
+  if (!myProjects.length) { toast('You have no projects assigned yet', 'error'); return; }
+  if (myProjects.length === 1) { openFundRequestModal(myProjects[0].id); return; }
+  const body = `<div class="field"><label>Select Project</label><select id="frp-project">${myProjects.map(p => `<option value="${p.id}">${escapeHtml(p.name)} - SMP ${escapeHtml(p.smp||'-')}</option>`).join('')}</select></div>`;
+  openModal('Request Funds — Choose Project', body, [{ label:'Cancel', cls:'btn btn-outline', onclick:'closeModal()' }, { label:'Continue', cls:'btn btn-primary', onclick:'const pid = document.getElementById("frp-project").value; closeModal(); setTimeout(()=>openFundRequestModal(pid), 300);' }]);
+}
+
+function myNotifications() { if (!currentUser) return []; return DB.notifications.filter(n => n.recipient_id === currentUser.id); }
+function updateNotifBadge() { const dot = document.getElementById('notifDot'); if (!dot) return; const c = myNotifications().filter(n=>!n.read).length; if (c>0){dot.textContent=c;dot.style.display='inline-block';}else{dot.style.display='none';} }
+function renderNotifications() { const list = myNotifications().sort((a,b)=>tsToMillis(b.created_at)-tsToMillis(a.created_at)); return `<div class="section-head"><div><span class="hash"># Alerts</span><h2>Notifications</h2><div class="sub">${list.filter(n=>!n.read).length} unread</div></div>${list.some(n=>!n.read)?`<button class="btn btn-sm btn-outline" onclick="markAllRead()">Mark all read</button>`:''}</div>${list.length?list.map(n=>`<div class="card mb-2" style="padding:14px 18px;border-left:3px solid ${n.read?'var(--border)':'var(--primary)'};cursor:pointer" onclick="openNotif('${n.id}')"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><div style="flex:1;min-width:180px"><div style="font-weight:600">${escapeHtml(n.title||'')}</div><div style="font-size:13px;color:var(--text-soft);margin-top:3px">${escapeHtml(n.message||'')}</div></div><div style="font-size:11px;color:var(--text-soft)">${timeAgo(n.created_at)}</div></div></div>`).join(''):'<div class="card empty-state"><i class="fas fa-bell"></i><div class="msg">No notifications yet</div></div>'}`; }
+async function openNotif(id) { const n = DB.notifications.find(x=>x.id===id); if (!n) return; n.read = true; try { await fsUpdate('notifications', id, { read: true }); } catch(e){} if (n.link) navigate(n.link.view, n.link.param); else navigate('notifications'); updateNotifBadge(); }
+async function markAllRead() { const mine = myNotifications().filter(n=>!n.read); for (const n of mine) { n.read = true; try { await fsUpdate('notifications', n.id, { read:true }); } catch(e){} } navigate('notifications'); toast('All marked as read'); }
+
+async function auditLog(action, desc) { try { const entry = { user: currentUser?.full_name || currentUser?.username || 'system', action, desc, at: Date.now() }; const id = await fsAdd('audit', entry); DB.audit.unshift({ id, ...entry }); } catch(e) { console.error('audit failed', e); } }
+function renderAudit() { const list = DB.audit.slice().sort((a,b)=>tsToMillis(b.at)-tsToMillis(a.at)).slice(0,100); return `<div class="section-head"><div><span class="hash"># History</span><h2>Audit Log</h2></div></div>${list.length?`<div class="table-wrap"><table><tr><th>Time</th><th>User</th><th>Action</th><th>Details</th></tr>${list.map(a=>`<tr><td style="font-size:11px;color:var(--text-soft)">${timeAgo(a.at)}</td><td><b>${escapeHtml(a.user||'')}</b></td><td>${escapeHtml(a.action||'')}</td><td style="font-size:12px">${escapeHtml(a.desc||'')}</td></tr>`).join('')}</table></div>`:'<div class="card empty-state"><i class="fas fa-history"></i><div class="msg">No activity yet</div></div>'}`; }
+
+function renderSettings() {
+  const smsLog = SMSService.log().slice(0, 20);
+  const eventRows = [
+    { key:'tlWelcome', label:'TL welcome SMS (with credentials)' }, { key:'tlProjectAssigned', label:'Notify TL on project assignment' },
+    { key:'tlProjectRemoved', label:'Notify TL on project removal' }, { key:'tlPasswordReset', label:'Notify TL on password reset' },
+    { key:'fundRequested', label:'Notify admin on fund request' }, { key:'fundApproved', label:'Notify TL on funds approved' },
+    { key:'fundDeclined', label:'Notify TL on funds declined' }, { key:'logSubmitted', label:'Notify admin on daily log' },
+    { key:'projectCompleted', label:'Notify admin on project completion' }, { key:'projectApproved', label:'Notify TL on project approved' },
+    { key:'projectReturned', label:'Notify TL on project returned' }, { key:'casualAddedToCasual', label:'Notify casual when added' },
+    { key:'casualAddedToAdmin', label:'Notify admin when casual added' }, { key:'casualRemovedFromCasual', label:'Notify casual when removed' },
+    { key:'casualRemovedFromAdmin', label:'Notify admin when casual removed' }
+  ];
+  return `<div class="section-head"><div><span class="hash"># Account</span><h2>Settings</h2></div></div>
+    <div class="grid grid-2 mb-4"><div class="card"><h4 style="font-size:14px;margin-bottom:12px">My Profile</h4><div style="display:grid;grid-template-columns:120px 1fr;gap:10px 14px;font-size:13px"><div style="color:var(--text-soft)">Full Name</div><div>${escapeHtml(currentUser.full_name||'-')}</div><div style="color:var(--text-soft)">Username</div><div>${escapeHtml(currentUser.username||'-')}</div><div style="color:var(--text-soft)">Phone</div><div>${escapeHtml(currentUser.phone||'-')}</div><div style="color:var(--text-soft)">Role</div><div><span class="badge badge-active">${currentUser.type}</span></div></div></div>
+      <div class="card"><h4 style="font-size:14px;margin-bottom:12px">Firebase</h4><div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px"><span>Project</span><span style="color:var(--text-soft)">newl-africa</span></div><div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px"><span>Auth UID</span><span style="color:var(--text-soft);font-family:monospace;font-size:11px">${escapeHtml(firebaseUser?.uid || '-')}</span></div><div style="display:flex;justify-content:space-between;padding:10px 0;font-size:13px"><span>Firestore</span><span style="color:var(--primary);font-weight:600">✓ Connected</span></div></div></div>
+    ${currentUser.type === 'admin' ? `<div class="card mb-4"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px"><i class="fas fa-sms" style="color:var(--primary)"></i> SMS Notifications (Cloudflare → Mobilesasa)</h4><span class="badge badge-${smsSettings.dryRun?'dry_run':'active'}">${smsSettings.dryRun?'Dry-run mode':'Live mode'}</span></div>
+      <div class="field-row"><div class="field"><label>Worker URL</label><input id="sms-worker" value="${escapeHtml(smsSettings.workerUrl||'')}"></div><div class="field"><label>Sender ID</label><input id="sms-sender" value="${escapeHtml(smsSettings.senderId)}"></div></div>
+      <div class="sms-row"><span>Dry-run mode (log only)</span><div class="switch ${smsSettings.dryRun?'on':''}" onclick="toggleSmsSetting('dryRun', this)"></div></div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-soft);font-weight:600;margin-bottom:8px">Auto-fire per event</div>${eventRows.map(ev => `<div class="sms-row"><span>${ev.label}</span><div class="switch ${smsSettings.events[ev.key]?'on':''}" onclick="toggleSmsEvent('${ev.key}', this)"></div></div>`).join('')}</div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-sm btn-primary" onclick="saveSmsConfig()"><i class="fas fa-save"></i> Save</button><button class="btn btn-sm btn-outline" onclick="openTestSmsModal()"><i class="fas fa-paper-plane"></i> Test SMS</button><button class="btn btn-sm btn-outline" onclick="clearSmsLog()"><i class="fas fa-eraser"></i> Clear Log</button></div></div>
+    <div class="card"><h4 style="font-size:14px;margin-bottom:12px"><i class="fas fa-list"></i> Recent SMS (${smsLog.length})</h4>${smsLog.length?smsLog.map(s=>`<div class="sms-log-item"><div class="sms-head"><span class="sms-to"><i class="fas fa-arrow-right" style="color:${s.status==='sent'||s.status==='accepted'?'var(--primary)':s.status==='failed'?'var(--danger)':'var(--text-soft)'}"></i> ${escapeHtml(s.to)}</span><span class="sms-time">${timeAgo(s.at)} - <span class="badge badge-${s.status}" style="font-size:9px;padding:1px 8px">${s.status}</span></span></div><div class="sms-msg">${escapeHtml(s.message)}</div>${s.error?`<div style="color:var(--danger);font-size:11px;margin-top:4px">Error: ${escapeHtml(s.error)}</div>`:''}</div>`).join(''):'<div style="text-align:center;padding:20px;color:var(--text-soft);font-size:13px">No SMS sent yet</div>'}</div>` : ''}`;
+}
+function toggleSmsSetting(k, el) { smsSettings[k]=!smsSettings[k]; el.classList.toggle('on', smsSettings[k]); saveSmsSettings(); }
+function toggleSmsEvent(k, el) { smsSettings.events[k]=!smsSettings.events[k]; el.classList.toggle('on', smsSettings.events[k]); saveSmsSettings(); }
+function saveSmsConfig() { const w = document.getElementById('sms-worker'); const s = document.getElementById('sms-sender'); if (w) smsSettings.workerUrl = w.value.trim(); if (s) smsSettings.senderId = s.value.trim() || 'MOBILESASA'; saveSmsSettings(); toast('Saved'); }
+function openTestSmsModal() { const body = `<div class="field"><label>Phone</label><input id="test-sms-phone" placeholder="+254712345678" value="${escapeHtml(currentUser.phone||'')}"></div><div class="field"><label>Message</label><textarea id="test-sms-msg">${escapeHtml(SMS.test())}</textarea></div><div style="font-size:12px;color:var(--text-soft);background:var(--bg);padding:10px;border-radius:10px"><b>Status:</b> ${smsSettings.dryRun?'Dry-run mode':'Live mode'}</div>`; openModal('Send Test SMS', body, [{ label:'Cancel', cls:'btn btn-outline', onclick:'closeModal()' }, { label:'Send', cls:'btn btn-primary', onclick:'sendTestSms()' }]); }
+async function sendTestSms() { const phone = document.getElementById('test-sms-phone').value.trim(); const msg = document.getElementById('test-sms-msg').value.trim(); if (!phone || !msg) { toast('Phone and message required', 'error'); return; } const result = await SMSService.send(phone, msg, null); if (result.ok) { toast(smsSettings.dryRun?'Test logged (dry-run)':'Test SMS sent'); closeModal(); navigate('settings'); } else toast('Test failed: ' + (result.error || 'unknown'), 'error'); }
+function clearSmsLog() { if (!confirm('Clear SMS log?')) return; SMSService.clearLog(); navigate('settings'); toast('Cleared'); }
+
+function openProjectModal(editId) {
+  const p = editId ? findProject(editId) : null;
+  const tls = DB.users.filter(u => u.role === 'team_leader');
+  const body = `<div class="field"><label>Project Name</label><input id="pf-name" value="${p?escapeHtml(p.name||''):''}" placeholder="e.g. Kisumu North Rollout 2026"></div><div class="field-row"><div class="field"><label>SMP</label><input id="pf-smp" value="${p?escapeHtml(p.smp||''):''}" placeholder="SMP-0098"></div><div class="field"><label>PO Number (optional)</label><input id="pf-po" value="${p?escapeHtml(p.po_number||''):''}" placeholder="Optional"></div></div><div class="field"><label>Site Module Package</label><input id="pf-module" value="${p?escapeHtml(p.site_module_package||''):''}" placeholder="e.g. TI Dismantling and Warehousing"></div><div class="field-row"><div class="field"><label>Region</label><input id="pf-region" value="${p?escapeHtml(p.region||''):''}" placeholder="Nyanza"></div><div class="field"><label>Location</label><input id="pf-location" value="${p?escapeHtml(p.location||''):''}" placeholder="Kisumu"></div></div><div class="field-row"><div class="field"><label>Client</label><input id="pf-client" value="${p?escapeHtml(p.client||''):''}" placeholder="Safaricom"></div><div class="field"><label>Budget (KES)</label><input id="pf-budget" type="number" value="${p?p.budget:''}" placeholder="1840000"></div></div><div class="field-row"><div class="field"><label>Start Date (optional)</label><input id="pf-start" type="date" value="${p&&p.start?fmtDateInput(p.start):''}"></div><div class="field"><label>End Date (optional)</label><input id="pf-end" type="date" value="${p&&p.end?fmtDateInput(p.end):''}"></div></div><div class="field"><label>Team Leader</label><select id="pf-tl"><option value="">- Unassigned -</option>${tls.map(t => `<option value="${t.id}" ${p&&p.team_leader_id===t.id?'selected':''}>${escapeHtml(t.full_name||t.username)}</option>`).join('')}</select></div><div class="field"><label>Description</label><textarea id="pf-desc">${p?escapeHtml(p.description||''):''}</textarea></div><div class="field"><label>Status</label><select id="pf-status"><option value="active" ${p&&p.status==='active'?'selected':''}>Active</option><option value="draft" ${p&&p.status==='draft'?'selected':''}>Draft</option><option value="on_hold" ${p&&p.status==='on_hold'?'selected':''}>On Hold</option><option value="completed" ${p&&p.status==='completed'?'selected':''}>Completed</option></select></div>`;
+  openModal(editId?'Edit Project':'New Project', body, [{ label:'Cancel', cls:'btn btn-outline', onclick:'closeModal()' }, { label: editId?'Save':'Create', cls:'btn btn-primary', onclick:`saveProject(${editId?`'${editId}'`:'null'})` }], true);
+}
+
+async function saveProject(id) {
+  const name = document.getElementById('pf-name').value.trim();
+  const smp = document.getElementById('pf-smp').value.trim();
+  const po_number = document.getElementById('pf-po').value.trim();
+  const site_module_package = document.getElementById('pf-module').value.trim();
+  const region = document.getElementById('pf-region').value.trim();
+  const location = document.getElementById('pf-location').value.trim();
+  const client = document.getElementById('pf-client').value.trim();
+  const budget = parseFloat(document.getElementById('pf-budget').value) || 0;
+  const startVal = document.getElementById('pf-start').value;
+  const endVal = document.getElementById('pf-end').value;
+  const start = startVal ? fromDateInput(startVal) : null;
+  const end = endVal ? fromDateInput(endVal) : null;
+  const team_leader_id = document.getElementById('pf-tl').value || null;
+  const description = document.getElementById('pf-desc').value.trim();
+  const status = document.getElementById('pf-status').value;
+  if (!name || !smp) { toast('Name and SMP are required', 'error'); return; }
+  if (start && end && end < start) { toast('End date must be after start date', 'error'); return; }
+  showLoading('Saving project...');
+  try {
+    if (id) {
+      const p = findProject(id); const oldTL = p.team_leader_id;
+      const patch = { name, smp, po_number, site_module_package, region, location, client, budget, start, end, team_leader_id, description, status };
+      await fsUpdate('projects', id, patch); Object.assign(p, patch);
+      auditLog('Updated Project', name); toast('Project updated');
+      if (team_leader_id && team_leader_id !== oldTL) { const tl = findTL(team_leader_id); if (tl?.phone) await SMSService.send(tl.phone, SMS.tlProjectAssigned(tl.full_name||tl.username, name, smp, po_number), 'tlProjectAssigned'); }
+      if (oldTL && oldTL !== team_leader_id) { const old = findTL(oldTL); if (old?.phone) await SMSService.send(old.phone, SMS.tlProjectRemoved(name), 'tlProjectRemoved'); }
+    } else {
+      const newId = await fsAdd('projects', { name, smp, po_number, site_module_package, region, location, client, description, budget, currency:'KES', status, start, end, team_leader_id, created_by: currentUser.id, sites: [] });
+      await fsSet('budgets', newId, { project_id: newId, allocated: budget, expenditure: [], additional_funds: [] });
+      DB.projects.push({ id:newId, name, smp, po_number, site_module_package, region, location, client, description, budget, status, start, end, team_leader_id, sites: [] });
+      DB.budgets.push({ id:newId, project_id:newId, allocated:budget, expenditure:[], additional_funds:[] });
+      auditLog('Created Project', `${name} (${smp})`);
+      toast('Project created');
+      if (team_leader_id) { const tl = findTL(team_leader_id); if (tl?.phone) await SMSService.send(tl.phone, SMS.tlProjectAssigned(tl.full_name||tl.username, name, smp, po_number), 'tlProjectAssigned'); }
+    }
+    hideLoading(); closeModal(); navigate('projects');
+  } catch(e) { hideLoading(); console.error(e); toast('Failed: '+e.message, 'error'); }
+}
+
+async function deleteProject(id) {
+  const p = findProject(id); if (!p) return;
+  if (!confirm(`Delete "${p.name}"? Casuals, logs and budget will also be removed.`)) return;
+  showLoading('Deleting...');
+  try {
+    for (const c of DB.casuals.filter(x=>x.project_id===id)) await fsDelete('casuals', c.id);
+    for (const l of DB.daily_logs.filter(x=>x.project_id===id)) await fsDelete('daily_logs', l.id);
+    if (DB.budgets.find(b=>b.project_id===id)) await fsDelete('budgets', id);
+    await fsDelete('projects', id);
+    DB.projects = DB.projects.filter(x=>x.id!==id);
+    DB.casuals = DB.casuals.filter(c=>c.project_id!==id);
+    DB.daily_logs = DB.daily_logs.filter(l=>l.project_id!==id);
+    DB.budgets = DB.budgets.filter(b=>b.project_id!==id);
+    auditLog('Deleted Project', p.name);
+    hideLoading(); toast('Project deleted'); navigate('projects');
+  } catch(e) { hideLoading(); console.error(e); toast('Failed: '+e.message, 'error'); }
+}
+
+function openExpenseModal(projectId) { const body = `<div class="field"><label>Item Description</label><input id="exf-item" placeholder="e.g. Mast section hardware"></div><div class="field-row"><div class="field"><label>Amount (KES)</label><input id="exf-amount" type="number" placeholder="120000"></div><div class="field"><label>Date</label><input id="exf-date" type="date" value="${fmtDateInput(Date.now())}"></div></div><div class="field"><label>Receipt / Reference</label><input id="exf-receipt" placeholder="RCP-001"></div>`; openModal('Add Expenditure', body, [{ label:'Cancel', cls:'btn btn-outline', onclick:'closeModal()' }, { label:'Add', cls:'btn btn-primary', onclick:`saveExpense('${projectId}')` }]); }
+
+async function saveExpense(projectId) {
+  const item = document.getElementById('exf-item').value.trim();
+  const amount = parseFloat(document.getElementById('exf-amount').value);
+  const date = fromDateInput(document.getElementById('exf-date').value) || Date.now();
+  const receipt = document.getElementById('exf-receipt').value.trim();
+  if (!item || !amount) { toast('Item and amount required', 'error'); return; }
+  showLoading('Saving...');
+  try {
+    let b = DB.budgets.find(x=>x.project_id===projectId);
+    const expenditure = b ? [...(b.expenditure||[])] : [];
+    expenditure.push({ id:'ex_'+Date.now(), date, item, amount, receipt, added_by: currentUser.id });
+    if (b) { await fsUpdate('budgets', projectId, { expenditure }); b.expenditure = expenditure; }
+    else { await fsSet('budgets', projectId, { project_id:projectId, allocated: findProject(projectId)?.budget||0, expenditure, additional_funds:[] }); DB.budgets.push({ id:projectId, project_id:projectId, allocated: findProject(projectId)?.budget||0, expenditure, additional_funds:[] }); }
+    auditLog('Added Expenditure', `${fmtKES(amount)} for ${item}`);
+    hideLoading(); closeModal(); toast('Expenditure added'); navigate('project-detail', projectId);
+  } catch(e) { hideLoading(); console.error(e); toast('Failed: '+e.message, 'error'); }
+}
+
+function openFundRequestModal(projectId) { const p = findProject(projectId); const body = `<div style="font-size:12px;color:var(--text-soft);background:var(--bg);padding:10px 14px;border-radius:10px;margin-bottom:12px"><b>${escapeHtml(p.name)}</b><br>SMP ${escapeHtml(p.smp||'-')}${p.po_number?' - PO '+escapeHtml(p.po_number):''}</div><div class="field"><label>Amount (KES)</label><input id="frf-amount" type="number" placeholder="120000"></div><div class="field"><label>Reason</label><textarea id="frf-reason" placeholder="Explain why additional funds are needed..."></textarea></div>`; openModal('Request Additional Funds', body, [{ label:'Cancel', cls:'btn btn-outline', onclick:'closeModal()' }, { label:'Submit Request', cls:'btn btn-primary', onclick:`saveFundRequest('${projectId}')` }]); }
+
+async function saveFundRequest(projectId) {
+  const amount = parseFloat(document.getElementById('frf-amount').value);
+  const reason = document.getElementById('frf-reason').value.trim();
+  if (!amount || amount <= 0 || !reason) { toast('Amount and reason required', 'error'); return; }
+  showLoading('Submitting...');
+  try {
+    let b = DB.budgets.find(x=>x.project_id===projectId);
+    const funds = b ? [...(b.additional_funds||[])] : [];
+    const reqId = 'af_' + Date.now();
+    funds.push({ id:reqId, amount, reason, requested_by: currentUser.id, requested_at: Date.now(), status:'pending', approved_amount:null, approved_by:null, approved_at:null });
+    if (b) { await fsUpdate('budgets', projectId, { additional_funds: funds }); b.additional_funds = funds; }
+    else { await fsSet('budgets', projectId, { project_id:projectId, allocated: findProject(projectId)?.budget||0, expenditure:[], additional_funds: funds }); DB.budgets.push({ id:projectId, project_id:projectId, allocated: findProject(projectId)?.budget||0, expenditure:[], additional_funds: funds }); }
+    auditLog('Requested Additional Funds', `${fmtKES(amount)} for ${findProject(projectId)?.name}`);
+    const adminUser = DB.users.find(u=>u.role==='admin'); const p = findProject(projectId);
+    if (adminUser) { const nid = await fsAdd('notifications', { recipient_id: adminUser.id, type:'fund_request', title:'Additional Funds Requested', message:`${currentUser.full_name||currentUser.username} requested ${fmtKES(amount)} on ${p.name}`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); DB.notifications.unshift({ id:nid, recipient_id: adminUser.id, type:'fund_request', title:'Additional Funds Requested', message:`${currentUser.full_name||currentUser.username} requested ${fmtKES(amount)} on ${p.name}`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); if (adminUser.phone) await SMSService.send(adminUser.phone, SMS.fundRequested(currentUser.full_name||currentUser.username, p.name, amount, reason), 'fundRequested'); }
+    hideLoading(); closeModal(); toast('Fund request submitted'); navigate('funds');
+  } catch(e) { hideLoading(); console.error(e); toast('Failed: '+e.message, 'error'); }
+}
+
+async function approveFund(projectId, fundId) {
+  const b = DB.budgets.find(x=>x.project_id===projectId); if (!b) return;
+  const funds = [...(b.additional_funds||[])]; const f = funds.find(x=>x.id===fundId); if (!f) return;
+  const amt = prompt('Approve amount (KES):', f.amount); if (amt === null) return;
+  const n = parseFloat(amt); if (!n || n <= 0) { toast('Invalid amount', 'error'); return; }
+  f.status='approved'; f.approved_amount=n; f.approved_by=currentUser.id; f.approved_at=Date.now();
+  try {
+    await fsUpdate('budgets', projectId, { additional_funds: funds }); b.additional_funds = funds;
+    auditLog('Approved Funds', `${fmtKES(n)} for ${findProject(projectId)?.name}`);
+    if (f.requested_by) { const tl = findTL(f.requested_by); const proj = findProject(projectId); if (tl) { const nid = await fsAdd('notifications', { recipient_id: tl.id, type:'fund_approved', title:'Funds Approved', message:`Your request of ${fmtKES(n)} for "${proj?.name}" was approved.`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); DB.notifications.unshift({ id:nid, recipient_id: tl.id, type:'fund_approved', title:'Funds Approved', message:`Your request of ${fmtKES(n)} for "${proj?.name}" was approved.`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); if (tl.phone) await SMSService.send(tl.phone, SMS.fundApproved(n, proj?.name||''), 'fundApproved'); } }
+    toast('Funds approved'); navigate(currentView, projectId);
+  } catch(e) { console.error(e); toast('Failed: '+e.message, 'error'); }
+}
+
+async function rejectFund(projectId, fundId) {
+  const b = DB.budgets.find(x=>x.project_id===projectId); if (!b) return;
+  const funds = [...(b.additional_funds||[])]; const f = funds.find(x=>x.id===fundId); if (!f) return;
+  const reason = prompt('Reason for declining (optional):', ''); if (reason === null) return;
+  f.status='rejected'; f.approved_by=currentUser.id; f.approved_at=Date.now(); f.reject_reason=reason;
+  try {
+    await fsUpdate('budgets', projectId, { additional_funds: funds }); b.additional_funds = funds;
+    auditLog('Declined Funds', `${fmtKES(f.amount)} for ${findProject(projectId)?.name}`);
+    if (f.requested_by) { const tl = findTL(f.requested_by); const proj = findProject(projectId); if (tl) { const nid = await fsAdd('notifications', { recipient_id: tl.id, type:'fund_rejected', title:'Funds Request Declined', message:`Your request of ${fmtKES(f.amount)} for "${proj?.name}" was declined.${reason?' Reason: '+reason:''}`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); DB.notifications.unshift({ id:nid, recipient_id: tl.id, type:'fund_rejected', title:'Funds Request Declined', message:`Your request of ${fmtKES(f.amount)} for "${proj?.name}" was declined.${reason?' Reason: '+reason:''}`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); if (tl.phone) await SMSService.send(tl.phone, SMS.fundDeclined(f.amount, proj?.name||'', reason), 'fundDeclined'); } }
+    toast('Declined'); navigate(currentView, projectId);
+  } catch(e) { console.error(e); toast('Failed: '+e.message, 'error'); }
+}
+
+function openCompleteProjectModal(projectId) { const p = findProject(projectId); const body = `<div style="font-size:13px;color:var(--text-soft);margin-bottom:14px">Mark <b>${escapeHtml(p.name)}</b> as complete? Admin will be notified.</div><div style="background:var(--bg);padding:12px;border-radius:12px;font-size:12px;color:var(--text-soft);margin-bottom:14px"><div><b>SMP:</b> ${escapeHtml(p.smp||'-')}${p.po_number?' - <b>PO:</b> '+escapeHtml(p.po_number):''}</div></div><div class="field"><label>Notes (optional)</label><textarea id="cpf-notes"></textarea></div>`; openModal('Mark Project Complete', body, [{ label:'Cancel', cls:'btn btn-outline', onclick:'closeModal()' }, { label:'Submit', cls:'btn btn-primary', onclick:`submitProjectCompletion('${projectId}')` }]); }
+
+async function submitProjectCompletion(projectId) {
+  const notes = document.getElementById('cpf-notes').value.trim();
+  const p = findProject(projectId); if (!p) return;
+  showLoading('Submitting...');
+  try {
+    await fsUpdate('projects', projectId, { status:'pending_approval', completion_notes: notes, completion_submitted_at: Date.now(), completion_submitted_by: currentUser.id });
+    p.status = 'pending_approval';
+    auditLog('Submitted Project Completion', p.name);
+    const adminUser = DB.users.find(u=>u.role==='admin');
+    if (adminUser) { const nid = await fsAdd('notifications', { recipient_id: adminUser.id, type:'project_completed', title:'Project Pending Approval', message:`${currentUser.full_name||currentUser.username} marked "${p.name}" as complete`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); DB.notifications.unshift({ id:nid, recipient_id: adminUser.id, type:'project_completed', title:'Project Pending Approval', message:`${currentUser.full_name||currentUser.username} marked "${p.name}" as complete`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); if (adminUser.phone) await SMSService.send(adminUser.phone, SMS.projectCompleted(currentUser.full_name||currentUser.username, p.name), 'projectCompleted'); }
+    hideLoading(); closeModal(); toast('Submitted for admin approval'); navigate('project-detail', projectId);
+  } catch(e) { hideLoading(); console.error(e); toast('Failed: '+e.message, 'error'); }
+}
+
+async function approveProject(projectId) {
+  const p = findProject(projectId); if (!p) return;
+  if (!confirm(`Approve "${p.name}" as complete?`)) return;
+  try {
+    await fsUpdate('projects', projectId, { status:'completed', approved_at: Date.now(), approved_by: currentUser.id });
+    p.status = 'completed';
+    auditLog('Approved Project Completion', p.name);
+    const tl = findTL(p.team_leader_id);
+    if (tl) { const nid = await fsAdd('notifications', { recipient_id: tl.id, type:'project_approved', title:'Project Approved', message:`Project "${p.name}" has been approved and marked complete.`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); DB.notifications.unshift({ id:nid, recipient_id: tl.id, type:'project_approved', title:'Project Approved', message:`Project "${p.name}" has been approved and marked complete.`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); if (tl.phone) await SMSService.send(tl.phone, SMS.projectApproved(p.name), 'projectApproved'); }
+    toast('Project approved'); navigate('project-detail', projectId);
+  } catch(e) { console.error(e); toast('Failed: '+e.message, 'error'); }
+}
+
+async function rejectProject(projectId) {
+  const p = findProject(projectId); if (!p) return;
+  const reason = prompt('Reason for sending back:', ''); if (reason === null) return;
+  try {
+    await fsUpdate('projects', projectId, { status:'active', reject_reason: reason });
+    p.status = 'active';
+    auditLog('Returned Project', `${p.name} - ${reason}`);
+    const tl = findTL(p.team_leader_id);
+    if (tl) { const nid = await fsAdd('notifications', { recipient_id: tl.id, type:'project_returned', title:'Project Returned', message:`"${p.name}" was sent back.${reason?' Reason: '+reason:''}`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); DB.notifications.unshift({ id:nid, recipient_id: tl.id, type:'project_returned', title:'Project Returned', message:`"${p.name}" was sent back.${reason?' Reason: '+reason:''}`, link:{view:'project-detail',param:projectId}, read:false, created_at: Date.now() }); if (tl.phone) await SMSService.send(tl.phone, SMS.projectReturned(p.name, reason), 'projectReturned'); }
+    toast('Returned to TL'); navigate('project-detail', projectId);
+  } catch(e) { console.error(e); toast('Failed: '+e.message, 'error'); }
+}
+
+function openModal(title, bodyHtml, buttons, wide) {
+  closeModal();
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'activeModal';
+  overlay.innerHTML = `<div class="modal ${wide?'wide':''}"><div class="modal-head"><h3>${escapeHtml(title)}</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div><div class="modal-body">${bodyHtml}</div><div class="modal-foot">${buttons.map(b => `<button class="${b.cls}" onclick="${b.onclick}">${b.label}</button>`).join('')}</div></div>`;
+  document.getElementById('modalRoot').appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('open'));
+}
+function closeModal() { const el = document.getElementById('activeModal'); if (el) { el.classList.remove('open'); setTimeout(()=>el.remove(), 250); } }
+
+function onGlobalSearch(term) { _searchTerm = term; if (!term.trim()) return; _projSearch = term; _projFilter = 'all'; if (currentView !== 'projects') navigate('projects'); else navigate('projects'); }
+
+async function init() {
+  loadSmsSettings();
+  await new Promise((resolve) => { if (window.firebaseAuth) return resolve(); window.addEventListener('firebase-ready', resolve, { once: true }); setTimeout(resolve, 3000); });
+  if (!window.firebaseAuth) { toast('Firebase failed to load. Check your internet and refresh.', 'error'); return; }
+  const restored = await restoreSession();
+  if (!restored) { document.getElementById('loginScreen').style.display = 'flex'; document.getElementById('appRoot').style.display = 'none'; }
+  console.log('NEWL AFRICA ready (Firebase-backed).');
+  console.log('SMS mode:', smsSettings.dryRun ? 'DRY RUN' : 'LIVE via Cloudflare Worker');
+}
+init();
+</script>
+</body>
+</html>
